@@ -10,10 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>spring-boot-fullstack-crud-full-stack-with-maven</artifactId>
+	<artifactId>{{cookiecutter.snake_case_slug}}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-boot-fullstack-crud-full-stack-with-maven</name>
-	<description>Demo project for Spring Boot</description>
+	<name>{{cookiecutter.snake_case_slug}}</name>
+	<description>A Spring Boot app built with Crowdbotics</description>
 
 	<properties>
 		<java.version>1.8</java.version>

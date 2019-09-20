@@ -1,4 +1,4 @@
-package com.example.course;
+package com.{{cookiecutter.snake_case_slug}}.course;
 
 import java.util.ArrayList;
 import java.util.List;
