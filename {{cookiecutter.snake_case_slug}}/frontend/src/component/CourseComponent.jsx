@@ -73,6 +73,7 @@ class CourseComponent extends Component {
             <div>
                 <h3>Course</h3>
                 <div className="container">
+                    {% raw %}
                     <Formik
                         initialValues={{ id, description }}
                         onSubmit={this.onSubmit}
@@ -81,6 +82,7 @@ class CourseComponent extends Component {
                         validate={this.validate}
                         enableReinitialize={true}
                     >
+                    {% endraw %}
                         {
                             (props) => (
                                 <Form>
