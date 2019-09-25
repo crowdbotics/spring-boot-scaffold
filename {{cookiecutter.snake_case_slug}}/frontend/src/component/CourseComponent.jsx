@@ -75,7 +75,7 @@ class CourseComponent extends Component {
                 <div className="container">
                     {% raw %}
                     <Formik
-                        initialValues={{ id, description }}
+                        initialValues={{ '{{' }} id, description {{ '}}' }}
                         onSubmit={this.onSubmit}
                         validateOnChange={false}
                         validateOnBlur={false}
