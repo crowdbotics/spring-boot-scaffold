@@ -31,7 +31,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		
-{%- if cookiecutter.has_jpa == true -%}
+{%- if cookiecutter.has_jpa == "y" -%}
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
