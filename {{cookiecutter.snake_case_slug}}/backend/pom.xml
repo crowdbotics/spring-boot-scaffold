@@ -29,7 +29,7 @@
 			<artifactId>spring-security-web</artifactId>
 		</dependency>
 
-{%- if cookiecutter.has_devtools == "y" -%}
+{%- if cookiecutter.has_spring_boot_devtools == "y" -%}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -44,7 +44,14 @@
 			<scope>provided</scope>
 		</dependency>
 {% endif %}
-		
+
+{%- if cookiecutter.has_jpa == "y" -%}
+		<dependency>
+			<groupId>org.springframework.boot</groupId
+			<artifactId>spring-boot-starter-data-rest</artifactId></dependency>
+		<dependency>
+{% endif %}
+
 {%- if cookiecutter.has_jpa == "y" -%}
 		<!-- JPA -->
 		<dependency>
@@ -58,7 +65,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.199</version>
 		</dependency>
 {% endif %}
 {%- if cookiecutter.has_mongodb_database == "y" -%}
@@ -67,7 +73,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.13</version>
+			<scope>runtime</scope>
 		</dependency>
 {% endif %}
 {%- if cookiecutter.has_postgresql_database == "y" -%}
