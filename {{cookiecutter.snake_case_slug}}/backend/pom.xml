@@ -58,7 +58,7 @@
 	</dependency>
 {% endif %}
 
-{%- if cookiecutter.has_jpa == "y" -%}
+{%- if cookiecutter.has_spring_boot_jpa == "y" -%}
 		<!-- JPA -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
