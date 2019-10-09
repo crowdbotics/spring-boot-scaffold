@@ -5,5 +5,7 @@
     "dash_case_slug": "{{ cookiecutter.snake_case_slug|replace('_', '-') }}",
     "github_url": "https://github.com/crowdbotics-users/{{ cookiecutter.dash_case_slug }}",
     "custom_domain": "",
-	"has_jpa": "y"
+	"has_jpa": "y",
+	"java_version": "1.8",
+	"spring_boot_version": "2.1.9.RELEASE"
 }
