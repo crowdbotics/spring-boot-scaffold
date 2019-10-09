@@ -6,14 +6,15 @@
     "github_url": "https://github.com/crowdbotics-users/{{ cookiecutter.dash_case_slug }}",
     "custom_domain": "",
 	"has_h2_database": "y",
-	"has_jpa": "y",
 	"has_lombok": "n",
 	"has_mongodb_database": "n",
 	"has_mysql_database": "n",
 	"has_postgresql_database": "n",
 	"has_redis_database": "n",
 	"has_spring_boot_devtools": "y",
+	"has_spring_boot_jpa": "y",
 	"has_spring_boot_rest": "y",
+	"has_spring_boot_session": "y",
 	"java_version": "1.8",
 	"spring_boot_version": "2.1.9.RELEASE"
 }

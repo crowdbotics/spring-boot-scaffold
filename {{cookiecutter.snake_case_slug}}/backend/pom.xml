@@ -45,11 +45,17 @@
 		</dependency>
 {% endif %}
 
-{%- if cookiecutter.has_jpa == "y" -%}
+{%- if cookiecutter.has_spring_boot_rest == "y" -%}
 		<dependency>
 			<groupId>org.springframework.boot</groupId
 			<artifactId>spring-boot-starter-data-rest</artifactId></dependency>
 		<dependency>
+{% endif %}
+{%- if cookiecutter.has_spring_boot_rest == "y" -%}
+	<dependency>
+		<groupId>org.springframework.session</groupId>
+		<artifactId>spring-session-data-redis</artifactId>
+	</dependency>
 {% endif %}
 
 {%- if cookiecutter.has_jpa == "y" -%}
