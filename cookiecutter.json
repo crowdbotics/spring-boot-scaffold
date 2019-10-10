@@ -1,10 +1,12 @@
 {
-    "project_slug": "",
+    "project_slug": "sample",
     "project_name": "",
     "snake_case_slug": "{{ cookiecutter.project_slug|lower|replace(' ', '_')|replace('-', '_') }}",
     "dash_case_slug": "{{ cookiecutter.snake_case_slug|replace('_', '-') }}",
     "github_url": "https://github.com/crowdbotics-users/{{ cookiecutter.dash_case_slug }}",
-    "custom_domain": "",
+    "custom_domain": "crowdbotics",
+    "custom_domain_extension": "com",
+    "custom_project_package": "{{ cookiecutter.project_slug|lower|replace(' ', '')|replace('-', '') }}",
 	"has_h2_database": "y",
 	"has_lombok": "n",
 	"has_mongodb_database": "n",
@@ -12,9 +14,10 @@
 	"has_postgresql_database": "n",
 	"has_redis_database": "n",
 	"has_spring_boot_devtools": "y",
-	"has_spring_boot_jpa": "y",
-	"has_spring_boot_rest": "y",
-	"has_spring_boot_session": "y",
+	"has_spring_boot_ldap": "n",
+	"has_spring_boot_rest": "n",
+	"has_spring_boot_session": "n",
+	"entity_id_type": "String",
 	"java_version": "1.8",
 	"spring_boot_version": "2.1.9.RELEASE"
 }

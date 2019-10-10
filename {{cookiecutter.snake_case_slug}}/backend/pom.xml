@@ -24,9 +24,23 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
+		</dependency>
+{%- if cookiecutter.has_spring_boot_ldap == "y" -%}
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+{% endif %}
+
+		<!-- JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
 {%- if cookiecutter.has_spring_boot_devtools == "y" -%}
@@ -47,23 +61,15 @@
 
 {%- if cookiecutter.has_spring_boot_rest == "y" -%}
 		<dependency>
-			<groupId>org.springframework.boot</groupId
-			<artifactId>spring-boot-starter-data-rest</artifactId></dependency>
-		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
 {% endif %}
 {%- if cookiecutter.has_spring_boot_rest == "y" -%}
 	<dependency>
 		<groupId>org.springframework.session</groupId>
 		<artifactId>spring-session-data-redis</artifactId>
 	</dependency>
-{% endif %}
-
-{%- if cookiecutter.has_spring_boot_jpa == "y" -%}
-		<!-- JPA -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
 {% endif %}
 
 		<!-- Database -->
