@@ -1,6 +1,6 @@
-package {{cookiecutter.custom_domain_extension}}.{{cookiecutter.custom_domain}}.{{cookiecutter.custom_project_package}}.repository.user;
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.repository.user;
 
-import {{cookiecutter.custom_domain_extension}}.{{cookiecutter.custom_domain}}.{{cookiecutter.custom_project_package}}.model.user.User;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
