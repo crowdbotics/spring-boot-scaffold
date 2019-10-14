@@ -1,0 +1,79 @@
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.web;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+
+/**
+ * <h1>User Controller</h1>
+ * 
+ * <p>Controller for authentication using {@literal Oauth2}.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@RestController
+public class UserController {
+	/**
+	 * Autowired constructor for {@link UserController}.
+	 * 
+	 * @param _clientRegistrationRepository			{@link ClientRegistrationRepository}
+	 */
+	public UserController(ClientRegistrationRepository _clientRegistrationRepository) {
+		clientRegistration = _clientRegistrationRepository.findByRegistrationId( "okta" );
+	}
+
+	//
+	// Operations
+	//
+
+	/**
+	 * 
+	 */
+	@GetMapping("/api/user")
+	public ResponseEntity<?> getUser( @AuthenticationPrincipal OAuth2User _oAuth2User ) {
+		if (_oAuth2User == null) {
+			return new ResponseEntity<>( "", HttpStatus.OK );
+		} else {
+			return ResponseEntity.ok().body( _oAuth2User.getAttributes() );
+		}
+	}
+
+	/**
+	 * Log the user out.
+	 */
+	@PostMapping("/api/logout")
+	public ResponseEntity<?> logout( HttpServletRequest _httpServletRequest,
+									@AuthenticationPrincipal(expression = "idToken") OidcIdToken _oidcIdToken) {
+		// send logout URL to client so they can initiate logout
+		String logoutUrl = clientRegistration
+			.getProviderDetails()
+			.getConfigurationMetadata()
+			.get( "end_session_endpoint" )
+			.toString()
+			;
+
+		Map<String, String> logoutDetails = new HashMap<>();
+		logoutDetails.put( "logoutUrl", logoutUrl );
+		logoutDetails.put( "idToken", _oidcIdToken.getTokenValue() );
+		_httpServletRequest.getSession( false ).invalidate();
+		return ResponseEntity.ok().body( logoutDetails );
+	}
+
+	//
+	// Autowired
+	//
+
+	private final ClientRegistration clientRegistration;
+
+}
