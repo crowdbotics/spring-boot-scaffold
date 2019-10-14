@@ -24,6 +24,7 @@
 	"pm_option": ["npm", "yarn"],
 	"pm_config_file": "",
 	"js_option": ["vanillajs", "flow", "typescript", "none"],
+	"js_config_file": "",
 	"bundling_option": ["webpack", "fuse-box", "parcel", "rollup", "browserify", "none"],
 	"testing_option": ["jest", "enzyme", "jasmine", "karma", "none"],
 	"linting_option": ["eslint", "tslint", "none"],
