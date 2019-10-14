@@ -14,5 +14,20 @@
 	"has_postgresql_database": "n",
 	"has_redis_database": "n",
 	"java_version": "1.8",
-	"spring_boot_version": "2.1.9.RELEASE"
+	"spring_boot_version": "2.1.9.RELEASE",
+
+	"xhr_option": ["fetch", "axios", "superagent", "request", "none"], 
+	"has_formik": "n",
+	"state_management_option": ["redux", "mobx3", "mobx4", "mobx5", "none"],
+	"has_styledComponents": "n",
+	"has_materialUi": "n",
+	"pm_option": ["npm", "yarn"],
+	"pm_config_file": "",
+	"js_option": ["vanillajs", "flow", "typescript", "none"],
+	"bundling_option": ["webpack", "fuse-box", "parcel", "rollup", "browserify", "none"],
+	"testing_option": ["jest", "enzyme", "jasmine", "karma", "none"],
+	"linting_option": ["eslint", "tslint", "none"],
+	"has_prettier": "n"
+
+	
 }
