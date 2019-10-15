@@ -30,7 +30,7 @@ public class User {
 	 * <p>Internal ID for the user.</p>
 	 */
     @Id
-{%- if cookiecutter.entity_id_type == "Long" -%}
+{% if cookiecutter.entity_id_type == "Long" %}
     @GeneratedValue
 {% endif %}
     private {{cookiecutter.entity_id_type}} id;
@@ -74,9 +74,9 @@ public class User {
 	/**
 	 * <h1>Secret</h1>
 	 */
-	private String secret;
+	private String secret = "";
 
-    private boolean using2FA;
+    private boolean using2FA = false;
 
 	/**
 	 * <h1>Roles</h1>
@@ -94,7 +94,7 @@ public class User {
     private Collection<Role> roles;
 
 	
-{%- if cookiecutter.has_lombok == "n" -%}
+{% if cookiecutter.has_lombok == "n" %}
 
 	public String getEmailAddress() { return emailAddress; }
 

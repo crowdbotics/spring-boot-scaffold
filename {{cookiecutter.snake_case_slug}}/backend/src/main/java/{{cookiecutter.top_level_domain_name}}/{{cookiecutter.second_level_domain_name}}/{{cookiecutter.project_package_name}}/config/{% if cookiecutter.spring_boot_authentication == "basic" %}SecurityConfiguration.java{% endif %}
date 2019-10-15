@@ -11,6 +11,10 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * <h1>Security Configuration</h1>
@@ -34,7 +38,13 @@ public class SecurityConfiguration
 	protected void configure( HttpSecurity _http ) throws Exception {
 		_http
 		 .csrf().disable()
-		 .authorizeRequests().anyRequest().authenticated()
+		 .authorizeRequests()
+//			.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+//				"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//				"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
+//				"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
+//			).permitAll()
+		 .anyRequest().authenticated()
 		 .and()
 		 .httpBasic()
 		 ;
@@ -47,15 +57,28 @@ public class SecurityConfiguration
 	 * @throws Exception
 	 */
 	@Autowired
-	public void configureGlobal( AuthenticationManagerBuilder _auth )
-			throws Exception
+	public void configureGlobal( 
+		final AuthenticationManagerBuilder _builder
+	)
+		throws Exception
 	{
-		_auth.inMemoryAuthentication()
-			.withUser( "admin" )
-			.password( "{noop}password" )
+		_builder.inMemoryAuthentication()
+			.withUser( USERNAME )
+			.password( passwordEncoder().encode( PASSWORD ) )
 			.roles( "USER" );
 	}
+	
+	//
+	// Attributes
+	//
+	
+	public static final String PASSWORD = "password";
+	public static final String USERNAME = "admin";
 
+	//
+	// Beans
+	//
+	
 	/**
 	 *
 	 */
@@ -76,15 +99,37 @@ public class SecurityConfiguration
 		return super.authenticationManagerBean();
 	}
 	
+//	/**
+//	 *
+//	 */
+//	@Bean
+//	public MessageSource messageSource()
+//	{
+//		ReloadableResourceBundleMessageSource messageSource
+//		  = new ReloadableResourceBundleMessageSource();
+//
+//		messageSource.setBasename( "classpath:messages" );
+//		messageSource.setDefaultEncoding( "UTF-8" );
+//
+//		return messageSource;
+//	}
+	
+	/**
+	 *
+	 */
 	@Bean
-	public MessageSource messageSource() 
+	public PasswordEncoder passwordEncoder() 
 	{
-		ReloadableResourceBundleMessageSource messageSource
-		  = new ReloadableResourceBundleMessageSource();
-		 
-		messageSource.setBasename( "classpath:messages" );
-		messageSource.setDefaultEncoding( "UTF-8" );
-		
-		return messageSource;
+		return new BCryptPasswordEncoder( 11 );
 	}
+
+	/**
+	 *
+	 */
+	@Bean
+	public SessionRegistry sessionRegistry() 
+	{
+		return new SessionRegistryImpl();
+	}
+
 }

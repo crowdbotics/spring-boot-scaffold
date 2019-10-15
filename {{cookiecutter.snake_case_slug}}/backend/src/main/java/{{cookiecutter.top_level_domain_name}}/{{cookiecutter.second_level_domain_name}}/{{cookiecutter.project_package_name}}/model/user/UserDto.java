@@ -66,9 +66,7 @@ public class UserDto {
 
 //	private Integer role = 0;
 
-
-{%- if cookiecutter.has_lombok == "n" -%}
-
+{% if cookiecutter.has_lombok == "n" %}
 	public String getEmailAddress() { return emailAddress; }
 
 	public String getFirstName() { return firstName; }

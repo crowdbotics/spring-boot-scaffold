@@ -17,9 +17,10 @@ import java.util.Optional;
  * 
  * @author crowdbotics.com
  */
-public interface UserSupport {
+public interface UserSupport 
+{
 
-    User registerNewUserAccount(UserDto accountDto) throws UserAlreadyExistException;
+    User registerNewUserAccount( UserDto _userDti ) throws UserAlreadyExistException;
 
     User getUser(String verificationToken);
 

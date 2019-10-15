@@ -27,10 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.ServletException;
@@ -100,25 +97,28 @@ public class RegistrationController {
 	
 	// Registration
 
+	//
+	//
+	public static final String USER_REGISTRATION = "/user/registration";
 	/**
 	 * 
 	 */
 	@RequestMapping( 
 		method = RequestMethod.POST
-		, value = "/user/registration"
+		, value = USER_REGISTRATION
 	)
 	@ResponseBody
 	public GenericResponse registerUserAccount( 
-		@Valid final UserDto _userDto
+		@RequestBody @Valid final UserDto _userDto
 		, final HttpServletRequest request
 	) 
 	{
-		LOGGER.debug("Registering user account with information: {}", _userDto );
+		LOGGER.debug( "Registering user account with information: {}", _userDto );
 
-		final User registered = userSupport.registerNewUserAccount( _userDto );
+		final User registeredUser = userSupport.registerNewUserAccount( _userDto );
 		
 		applicationEventPublisher.publishEvent( new OnRegistrationCompleteEvent(
-			registered
+			registeredUser
 			, request.getLocale()
 			, getAppUrl( request )
 		) );
@@ -126,33 +126,61 @@ public class RegistrationController {
 		return new GenericResponse( "success" );
 	}
 
+	//
+	//
+	public static final String REGISTRATION_CONFIRM = "/registrationConfirm";
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/registrationConfirm", method = RequestMethod.GET)
+	@RequestMapping(
+		method = RequestMethod.GET
+		, value = REGISTRATION_CONFIRM
+	)
 	public String confirmRegistration(
-		final HttpServletRequest request
-		, final Model model
-		, @RequestParam( "token" ) final String token
+		final HttpServletRequest _httpServletRequest
+		, final Model _model
+		, @RequestParam( "token" ) final String _token
 	)
 		throws UnsupportedEncodingException
 	{
-		Locale locale = request.getLocale();
-		final String result = userSupport.validateVerificationToken(token);
-		if (result.equals("valid")) {
-			final User user = userSupport.getUser(token);
+		final Locale locale = _httpServletRequest.getLocale();
+		final String result = userSupport.validateVerificationToken( _token );
+		if (result.equals( "valid" ) == true)
+		{
+			final User user = userSupport.getUser( _token );
 			// if (user.isUsing2FA()) {
 			// model.addAttribute("qr", userSupport.generateQRUrl(user));
 			// return "redirect:/qrcode.html?lang=" + locale.getLanguage();
 			// }
-			authWithoutPassword(user);
-			model.addAttribute("message", messageSource.getMessage("message.accountVerified", null, locale));
+			authWithoutPassword( user );
+			_model.addAttribute(
+				"message"
+				, messageSource.getMessage(
+					"message.accountVerified"
+					, null
+					, locale
+				)
+			);
+
 			return "redirect:/console.html?lang=" + locale.getLanguage();
 		}
 
-		model.addAttribute("message", messageSource.getMessage("auth.message." + result, null, locale));
-		model.addAttribute("expired", "expired".equals(result));
-		model.addAttribute("token", token);
+		_model.addAttribute(
+			"message"
+			, messageSource.getMessage(
+				"auth.message." + result
+				, null
+				, locale
+			)
+		);
+		_model.addAttribute(
+			"expired"
+			, "expired".equals( result )
+		);
+		_model.addAttribute(
+			"token"
+			, _token
+		);
 		
 		return "redirect:/badUser.html?lang=" + locale.getLanguage();
 	}

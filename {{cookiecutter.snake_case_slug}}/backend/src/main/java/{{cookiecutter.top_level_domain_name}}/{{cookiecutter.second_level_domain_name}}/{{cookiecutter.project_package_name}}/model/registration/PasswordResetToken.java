@@ -73,8 +73,9 @@ public class PasswordResetToken {
 
 	//
 
-{%- if cookiecutter.has_lombok == "n" -%}
-	public PasswordResetToken() {
+{% if cookiecutter.has_lombok == "n" %}
+	public PasswordResetToken() 
+	{
 		super();
 	}
 
@@ -107,6 +108,11 @@ public class PasswordResetToken {
 		this.expiryDate = expiryDate;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -117,6 +123,11 @@ public class PasswordResetToken {
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#equals(Object)
+	 */
 	@Override
 	public boolean equals(final Object obj) {
 		if (this == obj) {
@@ -153,6 +164,11 @@ public class PasswordResetToken {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#toString()
+	 */
 	@Override
 	public String toString() {
 		final StringBuilder builder = new StringBuilder();

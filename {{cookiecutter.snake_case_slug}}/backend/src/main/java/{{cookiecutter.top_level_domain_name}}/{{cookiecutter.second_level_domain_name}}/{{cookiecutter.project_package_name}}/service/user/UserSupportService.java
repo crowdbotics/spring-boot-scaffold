@@ -82,8 +82,12 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User registerNewUserAccount( final UserDto _userDto ) {
-		if (emailExists( _userDto.getEmailAddress() ) == true) {
+	public User registerNewUserAccount( 
+		final UserDto _userDto
+	)
+	{
+		if (emailExists( _userDto.getEmailAddress() ) == true) 
+		{
 			throw new UserAlreadyExistException( 
 				"There is an account with that email adress: " + _userDto.getEmailAddress()
 			);
@@ -95,7 +99,7 @@ public class UserSupportService implements UserSupport {
 		newUser.setPassword( passwordEncoder.encode( _userDto.getPassword() ) );
 		newUser.setEmailAddress( _userDto.getEmailAddress() );
 //		newUser.setUsing2FA(( _userDto.isUsing2FA() );
-		newUser.setRoles( Arrays.asList( roleRepository.findByName("ROLE_USER") ) );
+//		newUser.setRoles( Arrays.asList( roleRepository.findByName("ROLE_USER") ) );
 		
 		return userRepository.saveAndFlush( newUser );
 	}
