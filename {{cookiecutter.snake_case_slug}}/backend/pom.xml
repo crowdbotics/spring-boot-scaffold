@@ -9,10 +9,10 @@
 		<version>{{ cookiecutter.spring_boot_version }}</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>{{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}</groupId>
 	<artifactId>{{cookiecutter.snake_case_slug}}</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>{{cookiecutter.snake_case_slug}}</name>
+	<name>{{cookiecutter.project_slug}}</name>
 	<description>A Spring Boot app built with Crowdbotics</description>
 
 	<properties>
@@ -24,12 +24,40 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+
+		<!-- security -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+{%- if cookiecutter.has_spring_boot_ldap == "y" -%}
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-ldap</artifactId>
+		</dependency>
+{% endif %}
+{%- if cookiecutter.has_spring_boot_oauth2 == "y" -%}
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-oauth2-jose</artifactId>
+        </dependency>
+{% endif %}
 
-{%- if cookiecutter.has_devtools == "y" -%}
+		<!-- JPA -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+
+{%- if cookiecutter.has_spring_boot_devtools == "y" -%}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -44,13 +72,18 @@
 			<scope>provided</scope>
 		</dependency>
 {% endif %}
-		
-{%- if cookiecutter.has_jpa == "y" -%}
-		<!-- JPA -->
+
+{%- if cookiecutter.has_spring_boot_rest == "y" -%}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
+{% endif %}
+{%- if cookiecutter.has_spring_boot_session == "y" -%}
+	<dependency>
+		<groupId>org.springframework.session</groupId>
+		<artifactId>spring-session-data-redis</artifactId>
+	</dependency>
 {% endif %}
 
 		<!-- Database -->
@@ -58,7 +91,6 @@
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<version>1.4.199</version>
 		</dependency>
 {% endif %}
 {%- if cookiecutter.has_mongodb_database == "y" -%}
@@ -67,7 +99,7 @@
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.13</version>
+			<scope>runtime</scope>
 		</dependency>
 {% endif %}
 {%- if cookiecutter.has_postgresql_database == "y" -%}
@@ -78,6 +110,23 @@
 {% endif %}
 {%- if cookiecutter.has_redis_database == "y" -%}
 {% endif %}
+
+		<!-- Messaging -->
+{%- if cookiecutter.has_spring_boot_jms == "y" -%}
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-activemq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-broker</artifactId>
+        </dependency>
+{% endif %}
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
 
 		<!-- Testing -->
 		<dependency>
