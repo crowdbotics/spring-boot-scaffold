@@ -1,0 +1,90 @@
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.config;
+
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.ActiveUserStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+
+/**
+ * <h1>Security Configuration</h1>
+ *
+ * <p>This implementation supports basic authentication.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration 
+	extends WebSecurityConfigurerAdapter 
+{
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity)
+	 */
+	@Override
+	protected void configure( HttpSecurity _http ) throws Exception {
+		_http
+		 .csrf().disable()
+		 .authorizeRequests().anyRequest().authenticated()
+		 .and()
+		 .httpBasic()
+		 ;
+	}
+
+	/**
+	 * Configure for in-memory authentication.
+	 * 
+	 * @param _auth						{@link AuthenticationManagerBuilder}
+	 * @throws Exception
+	 */
+	@Autowired
+	public void configureGlobal( AuthenticationManagerBuilder _auth )
+			throws Exception
+	{
+		_auth.inMemoryAuthentication()
+			.withUser( "admin" )
+			.password( "{noop}password" )
+			.roles( "USER" );
+	}
+
+	/**
+	 *
+	 */
+	@Bean
+	public ActiveUserStore activeUserStore() 
+	{
+		return new ActiveUserStore();
+	}
+
+	/**
+	 *
+	 */
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean()
+		throws Exception 
+	{
+		return super.authenticationManagerBean();
+	}
+	
+	@Bean
+	public MessageSource messageSource() 
+	{
+		ReloadableResourceBundleMessageSource messageSource
+		  = new ReloadableResourceBundleMessageSource();
+		 
+		messageSource.setBasename( "classpath:messages" );
+		messageSource.setDefaultEncoding( "UTF-8" );
+		
+		return messageSource;
+	}
+}
