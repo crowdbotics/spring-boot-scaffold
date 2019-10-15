@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
@@ -90,28 +91,17 @@ public class RegistrationControllerTests
 		throws Exception
 	{
 		final String baseUrl = "http://localhost:" + port + RegistrationController.REGISTRATION_CONFIRM;
-		final URI uri = new URI( baseUrl );
-
-		final HttpHeaders headers = new HttpHeaders();
-		headers.set( "X-COM-PERSIST", "true" );
-
-		final UserDto newUserDto = new UserDto();
-		newUserDto.setEmailAddress( "fflintstone@rockday.com" );
-		newUserDto.setFirstName( "Fred" );
-		newUserDto.setLastName( "Flintstone" );
-		newUserDto.setPassword( "Ilik3pebb!es" );
-		newUserDto.setMatchingPassword( "Ilik3pebb!es" );
-
-		HttpEntity<UserDto> request = new HttpEntity<>( newUserDto, headers );
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl( baseUrl )
+			.queryParam("token", "hello" )
+			;
 
 		ResponseEntity<String> result = restTemplate
 			.withBasicAuth(
 				SecurityConfiguration.USERNAME
 				, SecurityConfiguration.PASSWORD
 			)
-			.postForEntity(
-				uri
-				, request
+			.getForEntity(
+				builder.build().encode().toUri()
 				, String.class
 			)
 			;

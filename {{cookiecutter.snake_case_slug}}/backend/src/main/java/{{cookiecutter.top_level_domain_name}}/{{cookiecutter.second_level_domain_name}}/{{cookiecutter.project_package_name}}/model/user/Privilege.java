@@ -19,7 +19,7 @@ import javax.persistence.ManyToMany;
 public class Privilege {
 
     @Id
-{%- if cookiecutter.entity_id_type == "Long" -%}
+{% if cookiecutter.entity_id_type == "Long" %}
     @GeneratedValue
 {% endif %}
     private {{cookiecutter.entity_id_type}} id;

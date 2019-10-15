@@ -190,88 +190,179 @@ public class RegistrationController {
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/user/resendRegistrationToken", method = RequestMethod.GET)
+	@RequestMapping(
+		method = RequestMethod.GET
+		, value = "/user/resendRegistrationToken"
+	)
 	@ResponseBody
-	public GenericResponse resendRegistrationToken(final HttpServletRequest request, @RequestParam("token") final String existingToken) {
-		final VerificationToken newToken = userSupport.generateNewVerificationToken(existingToken);
-		final User user = userSupport.getUser(newToken.getToken());
-		mailSender.send(constructResendVerificationTokenEmail(getAppUrl(request), request.getLocale(), newToken, user));
+	public GenericResponse resendRegistrationToken(
+		final HttpServletRequest _request
+		, @RequestParam( "token" ) final String _existingToken
+	)
+	{
+		final VerificationToken newToken = userSupport.generateNewVerificationToken( _existingToken );
+		final User user = userSupport.getUser( newToken.getToken() );
+		
+		mailSender.send( constructResendVerificationTokenEmail( 
+			getAppUrl( _request )
+			, _request.getLocale()
+			, newToken
+			, user
+		) );
+		
 		return new GenericResponse( messageSource.getMessage(
 			"message.resendToken"
 			, null
-			, request.getLocale()
+			, _request.getLocale()
 		));
 	}
 
 	/**
-	 * 
+	 * Reset password
 	 */
-	// Reset password
-	@RequestMapping(value = "/user/resetPassword", method = RequestMethod.POST)
+	@RequestMapping(
+		method = RequestMethod.POST
+		, value = "/user/resetPassword"
+	)
 	@ResponseBody
-	public GenericResponse resetPassword(final HttpServletRequest request, @RequestParam("email") final String userEmail) {
-		final User user = userSupport.findUserByEmail(userEmail);
-		if (user != null) {
+	public GenericResponse resetPassword(
+		final HttpServletRequest _request
+		, @RequestParam( "email" ) final String _userEmail
+	)
+	{
+		final User user = userSupport.findUserByEmail( _userEmail );
+		
+		if (user != null) 
+		{
 			final String token = UUID.randomUUID().toString();
-			userSupport.createPasswordResetTokenForUser(user, token);
-			mailSender.send(constructResetTokenEmail(getAppUrl(request), request.getLocale(), token, user));
+			userSupport.createPasswordResetTokenForUser( user, token );
+			mailSender.send( constructResetTokenEmail(
+				getAppUrl( _request )
+				, _request.getLocale()
+				, token
+				, user
+			) );
 		}
-		return new GenericResponse(messageSource.getMessage("message.resetPasswordEmail", null, request.getLocale()));
+		
+		return new GenericResponse( messageSource.getMessage(
+			"message.resetPasswordEmail"
+			, null
+			, _request.getLocale()
+		) );
 	}
 
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/user/changePassword", method = RequestMethod.GET)
-	public String showChangePasswordPage(final Locale locale, final Model model, @RequestParam("id") final long id, @RequestParam("token") final String token) {
-		final String result = userSecuritySupport.validatePasswordResetToken(id, token);
-		if (result != null) {
-			model.addAttribute("message", messageSource.getMessage("auth.message." + result, null, locale));
-			return "redirect:/login?lang=" + locale.getLanguage();
+	@RequestMapping(
+		method = RequestMethod.GET
+		, value = "/user/changePassword"
+	)
+	public String showChangePasswordPage(
+		final Locale _locale
+		, final Model _model
+		, @RequestParam("id") final long _id
+		, @RequestParam("token") final String _token
+	) 
+	{
+		final String result = userSecuritySupport.validatePasswordResetToken( _id, _token );
+		if (result != null) 
+		{
+			_model.addAttribute( "message", messageSource.getMessage( 
+				"auth.message." + result
+				, null
+				, _locale
+			) );
+
+			return "redirect:/login?lang=" + _locale.getLanguage();
 		}
-		return "redirect:/updatePassword.html?lang=" + locale.getLanguage();
+
+		return "redirect:/updatePassword.html?lang=" + _locale.getLanguage();
 	}
 
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/user/savePassword", method = RequestMethod.POST)
+	@RequestMapping(
+		method = RequestMethod.POST
+		, value = "/user/savePassword"
+	)
 	@ResponseBody
-	public GenericResponse savePassword(final Locale locale, @Valid PasswordDto passwordDto) {
-		final User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		userSupport.changeUserPassword(user, passwordDto.getNewPassword());
-		return new GenericResponse( messageSource.getMessage( "message.resetPasswordSuc", null, locale ) );
+	public GenericResponse savePassword(
+		final Locale _locale
+		, @RequestBody @Valid final PasswordDto _passwordDto
+	) 
+	{
+		final User user = (User)SecurityContextHolder
+			.getContext()
+			.getAuthentication()
+			.getPrincipal()
+			;
+			
+		userSupport.changeUserPassword( user, _passwordDto.getNewPassword() );
+		
+		return new GenericResponse( messageSource.getMessage( 
+			"message.resetPasswordSuc"
+			, null
+			, _locale 
+		) );
 	}
 
 	/**
-	 * 
+	 * change user password
 	 */
-	// change user password
-	@RequestMapping(value = "/user/updatePassword", method = RequestMethod.POST)
+	@RequestMapping(
+		method = RequestMethod.POST
+		, value = "/user/updatePassword"
+	)
 	@ResponseBody
-	public GenericResponse changeUserPassword(final Locale locale, @Valid PasswordDto passwordDto) {
+	public GenericResponse changeUserPassword(
+		final Locale _locale
+		, @RequestBody @Valid final PasswordDto _passwordDto
+	)
+	{
 		final User user = userSupport.findUserByEmail(
-			((User)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getEmailAddress()
+			((User)SecurityContextHolder
+				.getContext()
+				.getAuthentication()
+				.getPrincipal()
+			).getEmailAddress()
 		);
 		
-		if (userSupport.checkIfValidOldPassword( user, passwordDto.getOldPassword() ) == false) {
+		if (userSupport.checkIfValidOldPassword( user, _passwordDto.getOldPassword() ) == false) 
+		{
 			throw new InvalidOldPasswordException();
 		}
-		userSupport.changeUserPassword(user, passwordDto.getNewPassword());
 		
-		return new GenericResponse(messageSource.getMessage("message.updatePasswordSuc", null, locale));
+		userSupport.changeUserPassword( user, _passwordDto.getNewPassword());
+		
+		return new GenericResponse( messageSource.getMessage(
+			"message.updatePasswordSuc"
+			, null
+			, _locale
+		) );
 	}
 
 	/**
 	 * 
 	 */
-	@RequestMapping(value = "/user/update/2fa", method = RequestMethod.POST)
+	@RequestMapping(
+		method = RequestMethod.POST
+		, value = "/user/update/2fa"
+	)
 	@ResponseBody
-	public GenericResponse modifyUser2FA(@RequestParam("use2FA") final boolean use2FA) throws UnsupportedEncodingException {
-		final User user = userSupport.updateUser2FA(use2FA);
-		if (use2FA) {
-			return new GenericResponse(userSupport.generateQRUrl(user));
+	public GenericResponse modifyUser2FA(
+		@RequestParam("use2FA") final boolean _use2FA
+	)
+		throws UnsupportedEncodingException 
+	{
+		final User user = userSupport.updateUser2FA( _use2FA );
+	
+		if (_use2FA == true)
+		{
+			return new GenericResponse( userSupport.generateQRUrl( user ) );
 		}
+		
 		return null;
 	}
 

@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
  * 
  * @author crowdbotics.com
  */
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 @Getter
 @NoArgsConstructor
 @Setter

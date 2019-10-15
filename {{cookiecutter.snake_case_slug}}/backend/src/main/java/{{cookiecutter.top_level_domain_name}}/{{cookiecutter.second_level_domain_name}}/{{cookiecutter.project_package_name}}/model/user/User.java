@@ -1,6 +1,6 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user;
 
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Collection;
  * 
  * @author crowdbotics.com
  */
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 @AllArgsConstructor
 @Data
 @NoArgsConstructor

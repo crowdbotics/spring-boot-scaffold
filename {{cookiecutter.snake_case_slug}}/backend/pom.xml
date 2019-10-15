@@ -47,7 +47,7 @@
         </dependency>
         
 		<!-- authentication -->
-{%- if cookiecutter.spring_boot_authentication == "ldap" -%}
+{% if cookiecutter.spring_boot_authentication == "ldap" %}
 		<dependency>
 			<groupId>org.springframework.ldap</groupId>
 			<artifactId>spring-ldap-core</artifactId>
@@ -57,7 +57,7 @@
 			<artifactId>spring-security-ldap</artifactId>
 		</dependency>
 {% endif %}
-{%- if cookiecutter.spring_boot_authentication == "oauth2" -%}
+{% if cookiecutter.spring_boot_authentication == "oauth2" %}
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-client</artifactId>
@@ -74,7 +74,7 @@
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 
-{%- if cookiecutter.has_spring_boot_devtools == "y" -%}
+{% if cookiecutter.has_spring_boot_devtools == "y" %}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -82,7 +82,7 @@
 		</dependency>
 {% endif %}
 
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
@@ -90,13 +90,13 @@
 		</dependency>
 {% endif %}
 
-{%- if cookiecutter.has_spring_boot_rest == "y" -%}
+{% if cookiecutter.has_spring_boot_rest == "y" %}
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
 {% endif %}
-{%- if cookiecutter.has_spring_boot_session == "y" -%}
+{% if cookiecutter.has_spring_boot_session == "y" %}
 	<dependency>
 		<groupId>org.springframework.session</groupId>
 		<artifactId>spring-session-data-redis</artifactId>
@@ -104,32 +104,32 @@
 {% endif %}
 
 		<!-- Database -->
-{%- if cookiecutter.database_option == "h2" -%}
+{% if cookiecutter.database_option == "h2" %}
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 		</dependency>
 {% endif %}
-{%- if cookiecutter.database_option == "mongodb" -%}
+{% if cookiecutter.database_option == "mongodb" %}
 {% endif %}
-{%- if cookiecutter.database_option == "mysql" -%}
+{% if cookiecutter.database_option == "mysql" %}
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
 {% endif %}
-{%- if cookiecutter.database_option == "postgresql" -%}
+{% if cookiecutter.database_option == "postgresql" %}
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 		</dependency>
 {% endif %}
-{%- if cookiecutter.database_option == "mongodb" -%}
+{% if cookiecutter.database_option == "mongodb" %}
 {% endif %}
 
 		<!-- Messaging -->
-{%- if cookiecutter.has_spring_boot_jms == "y" -%}
+{% if cookiecutter.has_spring_boot_jms == "y" %}
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-activemq</artifactId>

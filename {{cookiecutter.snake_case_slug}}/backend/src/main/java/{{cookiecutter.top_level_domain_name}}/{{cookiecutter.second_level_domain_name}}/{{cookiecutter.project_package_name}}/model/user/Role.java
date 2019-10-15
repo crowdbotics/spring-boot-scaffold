@@ -26,7 +26,7 @@ public class Role {
 	 * <p>Internal ID for the user.</p>
 	 */
 	@Id
-{%- if cookiecutter.entity_id_type == "Long" -%}
+{% if cookiecutter.entity_id_type == "Long" %}
     @GeneratedValue
 {% endif %}
 	private {{cookiecutter.entity_id_type}} id;

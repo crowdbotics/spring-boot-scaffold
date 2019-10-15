@@ -20,7 +20,7 @@ import java.util.Date;
  *
  * @author crowdbotics.com
  */
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
@@ -31,7 +31,7 @@ public class PasswordResetToken {
 	private static final int EXPIRATION = 60 * 24;
 
 	@Id
-{%- if cookiecutter.entity_id_type == "Long" -%}
+{% if cookiecutter.entity_id_type == "Long" %}
 	@GeneratedValue(strategy = GenerationType.AUTO)
 {% endif %}
 	private {{cookiecutter.entity_id_type}} id;
