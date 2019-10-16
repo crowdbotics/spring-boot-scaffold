@@ -18,3 +18,29 @@ $ npm start
 ```
 
 The terminal should automatically open a new browser window and navigate to `localhost:3000`. You can also do this manually.
+
+### Included libraries based on options
+- spring_boot_authentication
+  - ldap
+    - spring-ldap-core
+    - spring-security-ldap
+  - oauth2
+    - spring-security-oauth2-client
+    - spring-security-oauth2-jose
+- has_spring_boot_devtools
+  - spring-boot-devtools
+- has_lombok
+  - lombok
+- has_spring_boot_rest
+  - spring-boot-starter-data-rest
+- has_spring_boot_session
+  - spring-session-data-redis
+- database_option
+  - h2
+    - h2
+  - mongodb
+  - mysql
+    - mysql-connector-java
+  - postgresql
+    - postgresql
+  - 

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * <h1>Security Configuration</h1>
- * 
+ *
  * @author crowdbotics.com
  */
 @EnableWebSecurity
