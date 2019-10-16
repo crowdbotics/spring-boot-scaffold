@@ -1,5 +1,11 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user;
 
+{% if cookiecutter.has_lombok == "y" %}
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+{% endif %}
+
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -15,84 +21,105 @@ import javax.persistence.ManyToMany;
  * 
  * @author crowdbotics.com
  */
-@Entity
-public class Privilege {
-
-    @Id
-{% if cookiecutter.entity_id_type == "Long" %}
-    @GeneratedValue
+{% if cookiecutter.has_lombok == "y" %}
+@AllArgsConstructor
+@Data
+@NoArgsConstructor
 {% endif %}
-    private {{cookiecutter.entity_id_type}} id;
+@Entity
+public class Privilege 
+{
+	/**
+	 * <h1>ID</h1>
+	 * 
+	 * <p>Internal ID for the user.</p>
+	 */
+	@Id
+{% if cookiecutter.entity_id_type == "Long" %}
+	@GeneratedValue
+{% endif %}
+	private {{cookiecutter.entity_id_type}} id;
 
-    private String name;
+	/**
+	 * <h1>Name</h1>
+	 */
+	private String name;
 
-    @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+	/**
+	 * <h1>Roles</h1>
+	 */
+	@ManyToMany(mappedBy = "privileges")
+	private Collection<Role> roles;
 
-    public Privilege() {
-        super();
-    }
+	public Privilege(final String name) 
+	{
+		super();
+		this.name = name;
+	}
 
-    public Privilege(final String name) {
-        super();
-        this.name = name;
-    }
+{% if cookiecutter.has_lombok == "n" %}
 
-    //
+	public Privilege()
+	{
+		super();
+	}
 
-    public Long getId() {
-        return id;
-    }
+	//
 
-    public void setId(final Long id) {
-        this.id = id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(final Long id) {
+		this.id = id;
+	}
 
-    public void setName(final String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
+	public void setName(final String name) {
+		this.name = name;
+	}
 
-    public void setRoles(final Collection<Role> roles) {
-        this.roles = roles;
-    }
+	public Collection<Role> getRoles() {
+		return roles;
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
-    }
+	public void setRoles(final Collection<Role> roles) {
+		this.roles = roles;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Privilege other = (Privilege) obj;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
 
-    @Override
-    public String toString() {
-        final StringBuilder builder = new StringBuilder();
-        builder.append("Privilege [name=").append(name).append("]").append("[id=").append(id).append("]");
-        return builder.toString();
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Privilege other = (Privilege) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append("Privilege [name=").append(name).append("]").append("[id=").append(id).append("]");
+		return builder.toString();
+	}
+{% endif %}
 }

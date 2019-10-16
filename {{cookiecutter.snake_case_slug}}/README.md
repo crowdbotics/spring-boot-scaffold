@@ -20,29 +20,38 @@ $ npm start
 The terminal should automatically open a new browser window and navigate to `localhost:3000`. You can also do this manually.
 
 ### Included libraries based on options
-- spring_boot_authentication
-  - ldap
+{% if cookiecutter.spring_boot_authentication == "ldap" %}
     - spring-ldap-core
     - spring-security-ldap
-  - oauth2
+{% endif %}
+{% if cookiecutter.spring_boot_authentication == "oauth2" %}
     - spring-security-oauth2-client
     - spring-security-oauth2-jose
-- has_spring_boot_devtools
+{% endif %}
+{% if cookiecutter.has_spring_boot_devtools == "y" %}
   - spring-boot-devtools
-- has_lombok
+{% endif %}
+{% if cookiecutter.has_lombok == "y" %}
   - lombok
-- has_spring_boot_rest
+{% endif %}
+{% if cookiecutter.has_spring_boot_rest == "y" %}
   - spring-boot-starter-data-rest
-- has_spring_boot_session
+{% endif %}
+{% if cookiecutter.has_spring_boot_session == "y" %}
   - spring-session-data-redis
-- database_option
+{% endif %}
+{% if cookiecutter.database_option == "h2" %}
   - h2
-    - h2
-  - mongodb
-  - mysql
+{% endif %}
+{% if cookiecutter.database_option == "mongodb" %}
+{% endif %}
+{% if cookiecutter.database_option == "mysql" %}
     - mysql-connector-java
-  - postgresql
+{% endif %}
+{% if cookiecutter.database_option == "postgresql" %}
     - postgresql
-- has_spring_boot_jms
+{% endif %}
+{% if cookiecutter.has_spring_boot_jms == "y" %}
   - spring-boot-starter-activemq
   - activemq-broker
+{% endif %}
