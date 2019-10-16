@@ -1,0 +1,40 @@
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder;
+
+/**
+ * <h1>Security Configuration</h1>
+ * 
+ * @author crowdbotics.com
+ */
+@Configuration
+public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+	@Override
+	protected void configure( HttpSecurity _http ) throws Exception {
+		_http
+			.authorizeRequests()
+				.anyRequest().fullyAuthenticated()
+				.and()
+			.formLogin();
+	}
+
+	@Override
+	public void configure( AuthenticationManagerBuilder _auth ) throws Exception {
+		_auth
+			.ldapAuthentication()
+				.userDnPatterns( "uid={0},ou=people" )
+				.groupSearchBase( "ou=groups" )
+				.contextSource()
+					.url( "ldap://localhost:8389/dc=springframework,dc=org" )
+					.and()
+				.passwordCompare()
+					.passwordEncoder( new LdapShaPasswordEncoder() )
+					.passwordAttribute( "userPassword" );
+	}
+
+}
