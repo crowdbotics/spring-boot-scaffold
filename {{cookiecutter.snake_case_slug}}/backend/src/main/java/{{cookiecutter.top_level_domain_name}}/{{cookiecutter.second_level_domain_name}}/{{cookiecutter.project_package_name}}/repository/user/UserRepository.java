@@ -13,4 +13,16 @@ public interface UserRepository
 	extends JpaRepository<User, {{cookiecutter.entity_id_type}}> 
 		, JpaSpecificationExecutor<User>
 {
+	/**
+	 * 
+	 */
+	User findByEmailAddress( final String _emailAddress );
+	
+	/**
+	 * Delete the specified {@link User}.
+	 * 
+	 * @param _user						{@link User}
+	 */
+	@Override
+	void delete( final User _user );
 }
