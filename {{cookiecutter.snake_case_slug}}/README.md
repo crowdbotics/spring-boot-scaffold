@@ -46,4 +46,3 @@ The terminal should automatically open a new browser window and navigate to `loc
 - has_spring_boot_jms
   - spring-boot-starter-activemq
   - activemq-broker
-

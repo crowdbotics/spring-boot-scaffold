@@ -1,6 +1,6 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.registration;
 
-import com.crowdbotics.sample.model.user.User;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user.User;
 
 {%- if cookiecutter.has_lombok == "y" -%}
 import lombok.AllArgsConstructor;
