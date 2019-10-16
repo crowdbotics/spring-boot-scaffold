@@ -1,8 +1,8 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.registration;
 
-import com.crowdbotics.sample.model.user.User;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user.User;
 
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,25 +30,45 @@ public class PasswordResetToken {
 
 	private static final int EXPIRATION = 60 * 24;
 
+	/**
+	 * <h1>ID</h1>
+	 * 
+	 * <p>Internal ID for the user.</p>
+	 */
 	@Id
 {% if cookiecutter.entity_id_type == "Long" %}
 	@GeneratedValue(strategy = GenerationType.AUTO)
 {% endif %}
 	private {{cookiecutter.entity_id_type}} id;
 
+	/**
+	 * <h1>Token</h1>
+	 * 
+	 * <p>Token used to identify this password reset.</p>
+	 */
 	private String token;
 
+	/**
+	 * <h1>User</h1>
+	 * 
+	 * <p>User requesting the password reset.</p>
+	 */
 	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
 	@JoinColumn(nullable = false, name = "user_id")
 	private User user;
 
+	/**
+	 * <h1>Expiry Date</h1>
+	 * 
+	 * <p>Time interval the reset is allowed.</p>
+	 */
 	private Date expiryDate;
 
 	public PasswordResetToken(final String token) {
 		super();
 
 		this.token = token;
-		this.expiryDate = calculateExpiryDate(EXPIRATION);
+		this.expiryDate = calculateExpiryDate( EXPIRATION );
 	}
 
 	public PasswordResetToken(final String token, final User user) {
@@ -58,6 +78,10 @@ public class PasswordResetToken {
 		this.user = user;
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
+	
+	//
+	// Operations
+	//
 
 	private Date calculateExpiryDate(final int expiryTimeInMinutes) {
 		final Calendar cal = Calendar.getInstance();
@@ -71,58 +95,7 @@ public class PasswordResetToken {
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
 
-	//
-
 {% if cookiecutter.has_lombok == "n" %}
-	public PasswordResetToken() 
-	{
-		super();
-	}
-
-	//
-	public Long getId() {
-		return id;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(final String token) {
-		this.token = token;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(final User user) {
-		this.user = user;
-	}
-
-	public Date getExpiryDate() {
-		return expiryDate;
-	}
-
-	public void setExpiryDate(final Date expiryDate) {
-		this.expiryDate = expiryDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
-		result = prime * result + ((token == null) ? 0 : token.hashCode());
-		result = prime * result + ((user == null) ? 0 : user.hashCode());
-		return result;
-	}
-
 	/**
 	 * {@inheritDoc}
 	 *
@@ -175,6 +148,63 @@ public class PasswordResetToken {
 		builder.append("Token [String=").append(token).append("]").append("[Expires").append(expiryDate).append("]");
 		return builder.toString();
 	}
+{% endif %}
+
+	//
+
+{% if cookiecutter.has_lombok == "n" %}
+	public PasswordResetToken() 
+	{
+		super();
+	}
+
+	//
+	// field access methods
+	//
+	
+	public Long getId() {
+		return id;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(final String token) {
+		this.token = token;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(final User user) {
+		this.user = user;
+	}
+
+	public Date getExpiryDate() {
+		return expiryDate;
+	}
+
+	public void setExpiryDate(final Date expiryDate) {
+		this.expiryDate = expiryDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
+		result = prime * result + ((token == null) ? 0 : token.hashCode());
+		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		return result;
+	}
+
 {% endif %}
 
 }

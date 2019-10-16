@@ -1,8 +1,8 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.registration;
 
-import com.crowdbotics.sample.model.user.User;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user.User;
 
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ import java.util.Date;
  *
  * @author crowdbotics.com
  */
-{%- if cookiecutter.has_lombok == "y" -%}
+{% if cookiecutter.has_lombok == "y" %}
 @Data
 @NoArgsConstructor
 {% endif %}
@@ -29,8 +29,13 @@ public class VerificationToken {
 
 	private static final int EXPIRATION = 60 * 24;
 
+	/**
+	 * <h1>ID</h1>
+	 * 
+	 * <p>Internal ID for the user.</p>
+	 */
 	@Id
-{%- if cookiecutter.entity_id_type == "Long" -%}
+{% if cookiecutter.entity_id_type == "Long" %}
 	@GeneratedValue(strategy = GenerationType.AUTO)
 {% endif %}
 	private {{cookiecutter.entity_id_type}} id;
@@ -70,7 +75,7 @@ public class VerificationToken {
 		this.expiryDate = calculateExpiryDate(EXPIRATION);
 	}
 
-{%- if cookiecutter.has_lombok == "n" -%}
+{% if cookiecutter.has_lombok == "n" %}
 	public VerificationToken() {
 		super();
 	}

@@ -127,8 +127,6 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 {% endif %}
-{% if cookiecutter.database_option == "mongodb" %}
-{% endif %}
 
 		<!-- Messaging -->
 {% if cookiecutter.has_spring_boot_jms == "y" %}

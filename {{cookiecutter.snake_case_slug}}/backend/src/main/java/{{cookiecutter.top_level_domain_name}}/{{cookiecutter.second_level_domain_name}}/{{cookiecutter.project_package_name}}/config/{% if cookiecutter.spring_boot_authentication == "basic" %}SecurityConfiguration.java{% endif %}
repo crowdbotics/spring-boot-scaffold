@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -35,25 +36,32 @@ public class SecurityConfiguration
 	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity)
 	 */
 	@Override
-	protected void configure( HttpSecurity _http ) throws Exception {
+	protected void configure( 
+		final HttpSecurity _http
+	) 
+		throws Exception
+	{
 		_http
-		 .csrf().disable()
-		 .authorizeRequests()
-//			.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
-//				"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-//				"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
-//				"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
-//			).permitAll()
-		 .anyRequest().authenticated()
-		 .and()
-		 .httpBasic()
-		 ;
+			.csrf().disable()
+			.authorizeRequests()
+				.antMatchers( HttpMethod.OPTIONS, "/**" ).permitAll()
+
+//				.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+//					"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//					"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
+//					"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
+//				).permitAll()
+
+			.anyRequest().authenticated()
+			.and()
+			.httpBasic()
+			;
 	}
 
 	/**
 	 * Configure for in-memory authentication.
 	 * 
-	 * @param _auth						{@link AuthenticationManagerBuilder}
+	 * @param _builder					{@link AuthenticationManagerBuilder}
 	 * @throws Exception
 	 */
 	@Autowired
