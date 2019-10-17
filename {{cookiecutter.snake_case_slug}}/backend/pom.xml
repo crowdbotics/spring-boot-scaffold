@@ -17,8 +17,10 @@
 
 	<properties>
 		<guava.version>20.0</guava.version>
-		<java.version>{{ cookiecutter.java_version }}</java.version>
+		<maven.compiler.source>{{ cookiecutter.java_version }}</maven.compiler.source>
+		<maven.compiler.target>{{ cookiecutter.java_version }}</maven.compiler.target>
 		<passay.version>1.0</passay.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
