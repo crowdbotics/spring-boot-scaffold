@@ -4,7 +4,7 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-{% endif %}
+{%- endif %}
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -16,23 +16,42 @@ import java.util.Collection;
  * 
  * @author crowdbotics.com
  */
-{% if cookiecutter.has_lombok == "y" %}
+{%- if cookiecutter.has_lombok == "y" %}
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-{% endif %}
+{%- endif %}
 @Entity
-public class User {
+public class User 
+{
+{%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * No argument constructor for {@link User}.
+	 */
+	public User()
+	{
+		super();
+	}
+{%- endif %}
 
+	//
+	// Operations
+	//
+
+
+	//
+	// Fields
+	//
+	
 	/**
 	 * <h1>ID</h1>
 	 * 
 	 * <p>Internal ID for the user.</p>
 	 */
     @Id
-{% if cookiecutter.entity_id_type == "Long" %}
+{%- if cookiecutter.entity_id_type == "Long" %}
     @GeneratedValue
-{% endif %}
+{%- endif %}
     private {{cookiecutter.entity_id_type}} id;
 	
 	/**
@@ -76,56 +95,62 @@ public class User {
 	 */
 	private String secret = "";
 
-    private boolean using2FA = false;
+ 	/**
+	 * <h1>Using 2FA</h1>
+	 */
+   private boolean using2FA = false;
 
 	/**
 	 * <h1>Roles</h1>
 	 */
-    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-		name = "users_roles"
-		, joinColumns = @JoinColumn(
-			name = "user_id", referencedColumnName = "id"
+		joinColumns = @JoinColumn(
+			name = "user_id"
+			, referencedColumnName = "id"
 		)
 		, inverseJoinColumns = @JoinColumn(
-			name = "role_id", referencedColumnName = "id"
+			name = "role_id"
+			, referencedColumnName = "id"
 		)
+		, name = "users_roles"
+	)
+    @ManyToMany(
+		fetch = FetchType.EAGER
 	)
     private Collection<Role> roles;
-
 	
 {% if cookiecutter.has_lombok == "n" %}
+	//
+	// Access methods
+	//
 
 	public String getEmailAddress() { return emailAddress; }
-
-	public {{cookiecutter.entity_id_type}} getId() { return id; }
-
-	public String getPassword() { return password; }
-
-	public String getSecret() { return secret; }
-
-	public Collection<Role> getRoles() { return roles; }
-
-	public boolean isEnabled() { return enabled; }
-
-	public boolean isUsing2FA() { return using2FA; }
-
 	public void setEmailAddress( final String _value ) { emailAddress = _value; }
-	
-	public void setEnabled( final boolean _value ) { enabled = _value; }
 
+	public String getFirstName() { return firstName; }
 	public void setFirstName( final String _value ) { firstName = _value; }
 
+	public {{cookiecutter.entity_id_type}} getId() { return id; }
+	public void setId( final {{cookiecutter.entity_id_type}} _value ) { id = _value; }
+
+	public String getLastName() { return lastName; }
 	public void setLastName( final String _value ) { lastName = _value; }
 
+	public String getPassword() { return password; }
 	public void setPassword( final String _value ) { password = _value; }
 
+	public String getSecret() { return secret; }
 	public void setSecret( final String _value ) { secret = _value; }
 
+	public Collection<Role> getRoles() { return roles; }
 	public void setRoles( final Collection<Role> _value ) { roles = _value; }
 
+	public boolean isEnabled() { return enabled; }
+	public void setEnabled( final boolean _value ) { enabled = _value; }
+
+	public boolean isUsing2FA() { return using2FA; }
 	public void setUsing2FA( boolean _value ) { using2FA = _value; }
 
-{% endif %}
+{%- endif %}
 	
 }

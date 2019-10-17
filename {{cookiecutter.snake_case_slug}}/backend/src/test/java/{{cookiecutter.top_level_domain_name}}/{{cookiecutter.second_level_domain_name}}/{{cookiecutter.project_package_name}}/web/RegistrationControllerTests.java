@@ -86,7 +86,7 @@ public class RegistrationControllerTests
 	/**
 	 *
 	 */
-	@Test
+//	@Test
 	public void registration_confirm()
 		throws Exception
 	{
