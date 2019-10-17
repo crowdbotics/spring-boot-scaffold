@@ -6,7 +6,7 @@ import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-{% endif %}
+{%- endif %}
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -20,15 +20,69 @@ import java.util.Date;
  *
  * @author crowdbotics.com
  */
-{% if cookiecutter.has_lombok == "y" %}
+{%- if cookiecutter.has_lombok == "y" %}
 @AllArgsConstructor
 @Data
 @NoArgsConstructor
-{% endif %}
+{%- endif %}
 @Entity
-public class PasswordResetToken {
+public class PasswordResetToken 
+{
+{%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * No argument constructor for {@link PasswordResetToken}.
+	 */
+	public PasswordResetToken()
+	{
+		super();
+	}
+{%- endif %}
+
+	/**
+	 * Token constructor for {@link PasswordResetToken}.
+	 * 
+	 * @param _token					{@link String}
+	 */
+	public PasswordResetToken(
+		final String _token
+	) 
+	{
+		super();
+
+		token = _token;
+		expiryDate = calculateExpiryDate( EXPIRATION );
+	}
+
+	/**
+	 * Token/User constructor for {@link VerificationToken}.
+	 * 
+	 * @param _token					{@link String}
+	 */
+	public PasswordResetToken(
+		final String _token
+		, final User _user
+	)
+	{
+		super();
+		
+		token = _token;
+		user = _user;
+		expiryDate = calculateExpiryDate( EXPIRATION );
+	}
+	
+	//
+	// Operations
+	//
+
+	//
+	// Attributes
+	//
 
 	private static final int EXPIRATION = 60 * 24;
+	
+	//
+	// Fields
+	//
 
 	/**
 	 * <h1>ID</h1>
@@ -36,9 +90,9 @@ public class PasswordResetToken {
 	 * <p>Internal ID for the user.</p>
 	 */
 	@Id
-{% if cookiecutter.entity_id_type == "Long" %}
+{%- if cookiecutter.entity_id_type == "Long" %}
 	@GeneratedValue(strategy = GenerationType.AUTO)
-{% endif %}
+{%- endif %}
 	private {{cookiecutter.entity_id_type}} id;
 
 	/**
@@ -53,8 +107,17 @@ public class PasswordResetToken {
 	 * 
 	 * <p>User requesting the password reset.</p>
 	 */
-	@OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-	@JoinColumn(nullable = false, name = "user_id")
+	@JoinColumn(
+		foreignKey = @ForeignKey(
+			name = "FK_VERIFY_USER"
+		)
+		, name = "user_id"
+		, nullable = false
+	)
+	@OneToOne(
+		fetch = FetchType.EAGER
+		, targetEntity = User.class
+	)
 	private User user;
 
 	/**
@@ -64,21 +127,6 @@ public class PasswordResetToken {
 	 */
 	private Date expiryDate;
 
-	public PasswordResetToken(final String token) {
-		super();
-
-		this.token = token;
-		this.expiryDate = calculateExpiryDate( EXPIRATION );
-	}
-
-	public PasswordResetToken(final String token, final User user) {
-		super();
-
-		this.token = token;
-		this.user = user;
-		this.expiryDate = calculateExpiryDate(EXPIRATION);
-	}
-	
 	//
 	// Operations
 	//
@@ -102,92 +150,62 @@ public class PasswordResetToken {
 	 * @see Object#equals(Object)
 	 */
 	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
+	public boolean equals(
+		final Object _other
+	)
+	{
+		if (this == _other) 
+		{
 			return true;
 		}
-		if (obj == null) {
+		else if (_other == null)
+		{
 			return false;
 		}
-		if (getClass() != obj.getClass()) {
+		else if (getClass() != _other.getClass())
+		{
 			return false;
 		}
-		final PasswordResetToken other = (PasswordResetToken) obj;
-		if (expiryDate == null) {
-			if (other.expiryDate != null) {
+		
+		final PasswordResetToken otherPasswordResetToken = (PasswordResetToken)_other;
+		
+		if (expiryDate == null) 
+		{
+			if (otherPasswordResetToken.expiryDate != null)
+			{
 				return false;
 			}
-		} else if (!expiryDate.equals(other.expiryDate)) {
+		} 
+		else if (expiryDate.equals( otherPasswordResetToken.expiryDate ) == false)
+		{
 			return false;
 		}
-		if (token == null) {
-			if (other.token != null) {
+		
+		if (token == null) 
+		{
+			if (otherPasswordResetToken.token != null) 
+			{
 				return false;
 			}
-		} else if (!token.equals(other.token)) {
+		} 
+		else if (token.equals( otherPasswordResetToken.token ) == false) 
+		{
 			return false;
 		}
-		if (user == null) {
-			if (other.user != null) {
+		
+		if (user == null) 
+		{
+			if (otherPasswordResetToken.user != null) 
+			{
 				return false;
 			}
-		} else if (!user.equals(other.user)) {
+		} 
+		else if (user.equals( otherPasswordResetToken.user ) == false) 
+		{
 			return false;
 		}
+		
 		return true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @see Object#toString()
-	 */
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Token [String=").append(token).append("]").append("[Expires").append(expiryDate).append("]");
-		return builder.toString();
-	}
-{% endif %}
-
-	//
-
-{% if cookiecutter.has_lombok == "n" %}
-	public PasswordResetToken() 
-	{
-		super();
-	}
-
-	//
-	// field access methods
-	//
-	
-	public Long getId() {
-		return id;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(final String token) {
-		this.token = token;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(final User user) {
-		this.user = user;
-	}
-
-	public Date getExpiryDate() {
-		return expiryDate;
-	}
-
-	public void setExpiryDate(final Date expiryDate) {
-		this.expiryDate = expiryDate;
 	}
 
 	/**
@@ -196,15 +214,56 @@ public class PasswordResetToken {
 	 * @see Object#hashCode()
 	 */
 	@Override
-	public int hashCode() {
+	public int hashCode() 
+	{
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((expiryDate == null) ? 0 : expiryDate.hashCode());
 		result = prime * result + ((token == null) ? 0 : token.hashCode());
 		result = prime * result + ((user == null) ? 0 : user.hashCode());
+		
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#toString()
+	 */
+	@Override
+	public String toString() 
+	{
+		final StringBuilder builder = new StringBuilder();
+		builder
+			.append( "Token [String=" )
+			.append( token )
+			.append( "]" )
+			.append( "[Expires" )
+			.append( expiryDate )
+			.append( "]" )
+			;
+			
+		return builder.toString();
+	}
 {% endif %}
 
+	//
+
+{% if cookiecutter.has_lombok == "n" %}
+	//
+	// Access methods
+	//
+	
+	public {{cookiecutter.entity_id_type}} getId() { return id; }
+	public void setId( final {{cookiecutter.entity_id_type}} _value ) { id = _value; }
+
+	public String getToken() { return token; }
+	public void setToken( final String _value ) { token = _value; }
+
+	public User getUser() { return user; }
+	public void setUser( final User _value ) { user = _value; }
+
+	public Date getExpiryDate() { return expiryDate; }
+	public void setExpiryDate( final Date _value ) { expiryDate = _value; }
+{% endif %}
 }

@@ -20,39 +20,39 @@ import java.util.Optional;
 public interface UserSupport 
 {
 
-    User registerNewUserAccount( UserDto _userDti ) throws UserAlreadyExistException;
+    User registerNewUserAccount( UserDto _userDto ) throws UserAlreadyExistException;
 
-    User getUser(String verificationToken);
+    User getUser( String _verificationToken );
 
-    void saveRegisteredUser(User user);
+    void saveRegisteredUser( User _user );
 
-    void deleteUser(User user);
+    void deleteUser( User _user );
 
-    void createVerificationTokenForUser(User user, String token);
+    void createVerificationTokenForUser( User _user, String _token );
 
-    VerificationToken getVerificationToken(String VerificationToken);
+    VerificationToken getVerificationToken( String _verificationToken );
 
-    VerificationToken generateNewVerificationToken(String token);
+    VerificationToken generateNewVerificationToken( String _token );
 
-    void createPasswordResetTokenForUser(User user, String token);
+    void createPasswordResetTokenForUser( User _user, String _token );
 
-    User findUserByEmail(String email);
+    User findUserByEmail( String _emailAddress );
 
-    PasswordResetToken getPasswordResetToken(String token);
+    PasswordResetToken getPasswordResetToken( String _token );
 
-    User getUserByPasswordResetToken(String token);
+    User getUserByPasswordResetToken(String _token );
 
-    Optional<User> getUserByID(long id);
+    Optional<User> getUserByID( {{cookiecutter.entity_id_type}} _id );
 
-    void changeUserPassword(User user, String password);
+    void changeUserPassword( User _user, String _password );
 
-    boolean checkIfValidOldPassword(User user, String password);
+    boolean checkIfValidOldPassword( User _user, String _password );
 
-    String validateVerificationToken(String token);
+    String validateVerificationToken( String _token );
 
-    String generateQRUrl(User user) throws UnsupportedEncodingException;
+    String generateQRUrl( User _user ) throws UnsupportedEncodingException;
 
-    User updateUser2FA(boolean use2FA);
+    User updateUser2FA( boolean _use2FA );
 
     List<String> getUsersFromSessionRegistry();
 

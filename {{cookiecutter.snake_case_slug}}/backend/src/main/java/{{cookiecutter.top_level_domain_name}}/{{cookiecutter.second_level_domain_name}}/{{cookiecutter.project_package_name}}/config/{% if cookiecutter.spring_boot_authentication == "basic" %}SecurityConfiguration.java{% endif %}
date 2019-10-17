@@ -2,14 +2,14 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.ActiveUserStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -29,6 +29,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfiguration 
 	extends WebSecurityConfigurerAdapter 
 {
+
+//	/**
+//	 * {@inheritDoc}
+//	 *
+//	 * @see WebSecurityConfigurerAdapter#configure(AuthenticationManagerBuilder)
+//	 */
+//	@Override
+//	protected void configure(
+//		final AuthenticationManagerBuilder _authenticationManagerBuilder
+//	) 
+//		throws Exception 
+//	{
+//		_authenticationManagerBuilder.authenticationProvider( authenticationProvider() );
+//	}
 
 	/**
 	 * {@inheritDoc}
@@ -56,6 +70,20 @@ public class SecurityConfiguration
 			.and()
 			.httpBasic()
 			;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(WebSecurity)
+	 */
+	@Override
+	public void configure(
+		final WebSecurity _webSecurity
+	) 
+		throws Exception 
+	{
+		_webSecurity.ignoring().antMatchers( "/resources/**" );
 	}
 
 	/**
@@ -97,7 +125,7 @@ public class SecurityConfiguration
 	}
 
 	/**
-	 *
+	 * <h1>Authentication Manager</h1>
 	 */
 	@Bean
 	@Override
@@ -107,6 +135,18 @@ public class SecurityConfiguration
 		return super.authenticationManagerBean();
 	}
 	
+//	@Bean
+//	public DaoAuthenticationProvider authenticationProvider() 
+//	{
+//		final CustomAuthenticationProvider authenticationProvider 
+//			= new CustomAuthenticationProvider();
+//	
+//		authenticationProvider.setUserDetailsService( userDetailsService );
+//		authenticationProvider.setPasswordEncoder( passwordEncoder() );
+//	
+//		return authenticationProvider;
+//	}
+
 //	/**
 //	 *
 //	 */
