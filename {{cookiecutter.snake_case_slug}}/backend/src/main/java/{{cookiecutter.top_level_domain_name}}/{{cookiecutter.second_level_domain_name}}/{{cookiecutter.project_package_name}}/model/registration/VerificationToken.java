@@ -8,6 +8,9 @@ import lombok.NoArgsConstructor;
 {%- endif %}
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -223,12 +226,35 @@ public class VerificationToken
 {%- endif %}
 	private {{cookiecutter.entity_id_type}} id;
 
+	//
+	//
+	public static final String TOKEN = "token";
+	public static final int TOKEN_MAX_SIZE = 50;
 	/**
 	 * <h1>Token</h1>
 	 * 
 	 * <p>Token used to identify this verification.</p>
 	 */
-	private String token;
+	@Basic(
+		optional = false
+		, fetch = FetchType.EAGER
+	)
+	@Column(
+		length = TOKEN_MAX_SIZE
+		, name = "token"
+	)
+	@NotBlank(
+		message = "The token field must not be blank."
+	)
+	@NotNull(
+		message = "The token field must not be null."
+	)
+	@Size(
+		max = TOKEN_MAX_SIZE
+		, message = "The token field '${validatedValue}' must be between {min} and {max} characters."
+		, min = 1
+	)
+	private String token = "";
 
 	/**
 	 * <h1>User</h1>
@@ -236,10 +262,10 @@ public class VerificationToken
 	 * <p>User that is being verified.</p>
 	 */
 	@JoinColumn(
-		foreignKey = @ForeignKey(
-			name = "FK_VERIFY_USER"
-		)
-		, name = "user_id"
+//		foreignKey = @ForeignKey(
+//			name = "FK_VERIFY_USER"
+//		)
+		name = "user_id"
 		, nullable = false
 	)
 	@OneToOne(
