@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Spinner from "../layout/Spinner";
 import AppContext from "../appContext";
+import { theme } from "../../constant";
 
 class AppNavBar extends Component {
   onLogOut = async () => {
@@ -20,7 +21,7 @@ class AppNavBar extends Component {
     return (
       <nav
         className="navbar navbar-expand-md navbar-dark mb-4"
-        style={{ backgroundColor: "#330f77" }}
+        style={theme.background}
       >
         <div className="container">
           <Link to="/" className="navbar-brand">

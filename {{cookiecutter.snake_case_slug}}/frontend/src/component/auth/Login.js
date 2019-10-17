@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Alert from "../layout/Alert";
 import AppContext from "../appContext";
+import { theme } from "../../constant";
 
 const emailRegEx =
   // eslint-disable-next-line max-len
@@ -54,8 +55,8 @@ class Login extends Component {
                 <Alert message={message} messageType={messageType} />
               ) : null}
               <h1 className="text-center pb-4 pt-3">
-                <span style={{ color: "#330f77" }}>
-                  <i className="fas fa-lock" style={{ color: "#330f77" }} />{" "}
+                <span style={theme.primary}>
+                  <i className="fas fa-lock" style={theme.primary} />{" "}
                   Login
                 </span>
               </h1>
@@ -86,7 +87,7 @@ class Login extends Component {
                   type="submit"
                   value="Login"
                   className="btn btn-block"
-                  style={{ backgroundColor: "#330f77", color: "white" }}
+                  style={theme.button}
                 />
               </form>
             </div>

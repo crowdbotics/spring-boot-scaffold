@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import Alert from "../layout/Alert";
 import AppContext from "../appContext";
-
+import { theme } from "../../constant";
 const emailRegEx =
   // eslint-disable-next-line max-len
   /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 
 class Register extends Component {
   state = {
@@ -13,9 +12,7 @@ class Register extends Component {
     password: ""
   };
 
-  componentWillMount() {
-
-  }
+  componentWillMount() {}
 
   onSubmit = async e => {
     e.preventDefault();
@@ -24,48 +21,51 @@ class Register extends Component {
 
       if (!emailRegEx.test(email)) {
         this.setState({
-          message: 'Email is not valid!',
-          messageType: 'error'
-        })
+          message: "Email is not valid!",
+          messageType: "error"
+        });
         return;
       }
-  
+
       if (password.length < 6) {
         this.setState({
-          message: 'Password should be longer than 6 letters!',
-          messageType: 'error'
-        })
+          message: "Password should be longer than 6 letters!",
+          messageType: "error"
+        });
         return;
       }
 
       if (password != confirmPass) {
         this.setState({
-          message: 'Confirm password does not match!',
-          messageType: 'error'
-        })
+          message: "Confirm password does not match!",
+          messageType: "error"
+        });
         return;
       }
 
       await this.context.register(email, password, fname, lname);
 
       this.setState({
-        message: '',
-        messageType: ''
-      })
+        message: "",
+        messageType: ""
+      });
 
       this.props.history.push(`/`);
     } catch (error) {
       this.setState({
-        message: 'Register failed',
-        messageType: 'error'
-      })
+        message: "Register failed",
+        messageType: "error"
+      });
     }
   };
 
   onChange = e => this.setState({ [e.target.name]: e.target.value });
 
   render() {
-    const { message, messageType } = this.state
+    const { message, messageType } = this.state;
+    //cookie cutter does not want inline style
+    const buttonStyle = { backgroundColor: "#330f77", color: "white" };
+
     return (
       <div className="row">
         <div className="col-md-6 mx-auto">
@@ -75,8 +75,8 @@ class Register extends Component {
                 <Alert message={message} messageType={messageType} />
               ) : null}
               <h1 className="text-center pb-4 pt-3">
-                <span style={{color: '#330f77'}}>
-                  <i className="fas fa-lock" style={{color: '#330f77'}}/> Register
+                <span style={theme.primary}>
+                  <i className="fas fa-lock" style={theme.primary} /> Register
                 </span>
               </h1>
               <form onSubmit={this.onSubmit}>
@@ -139,7 +139,7 @@ class Register extends Component {
                   type="submit"
                   value="Register"
                   className="btn btn-block"
-                  style={{backgroundColor: '#330f77', color: 'white'}}
+                  style={theme.button}
                 />
               </form>
             </div>
