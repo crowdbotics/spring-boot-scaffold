@@ -2,7 +2,6 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.validation.ValidEmail;
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.validation.ValidPassword;
-
 {%- if cookiecutter.has_lombok == "y" %}
 import lombok.Getter;
 import lombok.NoArgsConstructor;
