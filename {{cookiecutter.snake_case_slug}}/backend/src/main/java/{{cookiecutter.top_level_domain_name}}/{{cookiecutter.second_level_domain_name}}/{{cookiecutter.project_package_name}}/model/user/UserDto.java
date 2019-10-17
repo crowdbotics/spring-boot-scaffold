@@ -3,6 +3,13 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.validation.ValidEmail;
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.validation.ValidPassword;
 
+{%- if cookiecutter.has_lombok == "y" %}
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+{%- endif %}
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,14 +21,62 @@ import javax.validation.constraints.Size;
  * 
  * @author crowdbotics.com
  */
-{% if cookiecutter.has_lombok == "y" %}
+{%- if cookiecutter.has_lombok == "y" %}
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-{% endif %}
-public class UserDto {
+{%- endif %}
+public class UserDto 
+{
+{%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * No argument constructor for {@link UserDto}.
+	 */
+	public UserDto()
+	{
+		super();
+	}
+{%- endif %}
 
+	//
+	// Operations
+	//
+
+{%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final StringBuilder builder = new StringBuilder();
+		builder.append( "UserDto [firstName=" )
+			.append( firstName )
+			.append( ", lastName=" )
+			.append( lastName )
+			.append( ", password=" )
+			.append( password )
+			.append( ", matchingPassword=" )
+			.append( matchingPassword )
+			.append( ", email address=" )
+			.append( emailAddress )
+//			.append( ", using2FA=" )
+//			.append( using2FA )
+//			.append( ", role=" )
+//			.append( role )
+			.append( "]" )
+			;
+			
+		return builder.toString();
+	}
+{%- endif %}
+
+	//
+	// Fields
+	//
+	
 	@NotNull(
 		message = "The first name field must not be null."
 	)
@@ -67,56 +122,30 @@ public class UserDto {
 //	private Integer role = 0;
 
 {% if cookiecutter.has_lombok == "n" %}
+	//
+	// Access methods
+	//
+	
 	public String getEmailAddress() { return emailAddress; }
-
-	public String getFirstName() { return firstName; }
-
-	public String getLastName() { return lastName; }
-
-	public String getMatchingPassword() { return matchingPassword; }
-
-	public String getPassword() { return password; }
-
-//	public Integer getRole() { return role; }
-
-//	public boolean isUsing2FA() { return using2FA; }
-
 	public void setEmailAddress( final String _value ) { emailAddress = _value; }
 
+	public String getFirstName() { return firstName; }
 	public void setFirstName( final String _value ) { firstName = _value; }
 
+	public String getLastName() { return lastName; }
 	public void setLastName( final String _value ) { lastName = _value; }
 
+	public String getMatchingPassword() { return matchingPassword; }
 	public void setMatchingPassword( final String _value ) { matchingPassword = _value; }
 
+	public String getPassword() { return password; }
 	public void setPassword( final String _value ) { password = _value; }
 
+//	public Integer getRole() { return role; }
 //	public void setRole( final Integer _value ) { role = _value; }
 
+//	public boolean isUsing2FA() { return using2FA; }
 //	public void setUsing2FA( boolean _value ) { using2FA = _value; }
-
-	@Override
-	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append( "UserDto [firstName=" )
-			.append( firstName )
-			.append( ", lastName=" )
-			.append( lastName )
-			.append( ", password=" )
-			.append( password )
-			.append( ", matchingPassword=" )
-			.append( matchingPassword )
-			.append( ", email address=" )
-			.append( emailAddress )
-//			.append( ", using2FA=" )
-//			.append( using2FA )
-//			.append( ", role=" )
-//			.append( role )
-			.append( "]" )
-			;
-			
-		return builder.toString();
-	}
-{% endif %}
+{%- endif %}
 
 }

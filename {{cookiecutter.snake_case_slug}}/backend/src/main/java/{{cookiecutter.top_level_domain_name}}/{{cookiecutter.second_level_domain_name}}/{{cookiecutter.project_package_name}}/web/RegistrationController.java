@@ -261,7 +261,7 @@ public class RegistrationController {
 	public String showChangePasswordPage(
 		final Locale _locale
 		, final Model _model
-		, @RequestParam("id") final long _id
+		, @RequestParam("id") final {{cookiecutter.entity_id_type}} _id
 		, @RequestParam("token") final String _token
 	) 
 	{

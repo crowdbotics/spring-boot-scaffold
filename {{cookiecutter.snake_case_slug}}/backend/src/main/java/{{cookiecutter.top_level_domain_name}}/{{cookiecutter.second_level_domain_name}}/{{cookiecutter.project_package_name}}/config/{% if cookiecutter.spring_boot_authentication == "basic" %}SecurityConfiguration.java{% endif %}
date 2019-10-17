@@ -2,13 +2,14 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.ActiveUserStore;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.session.SessionRegistry;
@@ -29,31 +30,66 @@ public class SecurityConfiguration
 	extends WebSecurityConfigurerAdapter 
 {
 
+//	/**
+//	 * {@inheritDoc}
+//	 *
+//	 * @see WebSecurityConfigurerAdapter#configure(AuthenticationManagerBuilder)
+//	 */
+//	@Override
+//	protected void configure(
+//		final AuthenticationManagerBuilder _authenticationManagerBuilder
+//	) 
+//		throws Exception 
+//	{
+//		_authenticationManagerBuilder.authenticationProvider( authenticationProvider() );
+//	}
+
 	/**
 	 * {@inheritDoc}
 	 *
 	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity)
 	 */
 	@Override
-	protected void configure( HttpSecurity _http ) throws Exception {
+	protected void configure( 
+		final HttpSecurity _http
+	) 
+		throws Exception
+	{
 		_http
-		 .csrf().disable()
-		 .authorizeRequests()
-//			.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
-//				"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
-//				"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
-//				"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
-//			).permitAll()
-		 .anyRequest().authenticated()
-		 .and()
-		 .httpBasic()
-		 ;
+			.csrf().disable()
+			.authorizeRequests()
+				.antMatchers( HttpMethod.OPTIONS, "/**" ).permitAll()
+
+//				.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+//					"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//					"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
+//					"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
+//				).permitAll()
+
+			.anyRequest().authenticated()
+			.and()
+			.httpBasic()
+			;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(WebSecurity)
+	 */
+	@Override
+	public void configure(
+		final WebSecurity _webSecurity
+	) 
+		throws Exception 
+	{
+		_webSecurity.ignoring().antMatchers( "/resources/**" );
 	}
 
 	/**
 	 * Configure for in-memory authentication.
 	 * 
-	 * @param _auth						{@link AuthenticationManagerBuilder}
+	 * @param _builder					{@link AuthenticationManagerBuilder}
 	 * @throws Exception
 	 */
 	@Autowired
@@ -89,7 +125,7 @@ public class SecurityConfiguration
 	}
 
 	/**
-	 *
+	 * <h1>Authentication Manager</h1>
 	 */
 	@Bean
 	@Override
@@ -99,6 +135,18 @@ public class SecurityConfiguration
 		return super.authenticationManagerBean();
 	}
 	
+//	@Bean
+//	public DaoAuthenticationProvider authenticationProvider() 
+//	{
+//		final CustomAuthenticationProvider authenticationProvider 
+//			= new CustomAuthenticationProvider();
+//	
+//		authenticationProvider.setUserDetailsService( userDetailsService );
+//		authenticationProvider.setPasswordEncoder( passwordEncoder() );
+//	
+//		return authenticationProvider;
+//	}
+
 //	/**
 //	 *
 //	 */

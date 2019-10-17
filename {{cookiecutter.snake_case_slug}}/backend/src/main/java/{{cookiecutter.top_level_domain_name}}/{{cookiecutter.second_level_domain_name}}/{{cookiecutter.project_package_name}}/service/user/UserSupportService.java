@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
  */
 @Service
 @Transactional
-public class UserSupportService implements UserSupport {
-
+public class UserSupportService implements UserSupport 
+{
 	/**
 	 * Autowired constructor for {@link UserSupportService}.
 	 *
@@ -89,7 +89,7 @@ public class UserSupportService implements UserSupport {
 		if (emailExists( _userDto.getEmailAddress() ) == true) 
 		{
 			throw new UserAlreadyExistException( 
-				"There is an account with that email adress: " + _userDto.getEmailAddress()
+				"There is an account with that email address: " + _userDto.getEmailAddress()
 			);
 		}
 		
@@ -108,9 +108,14 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User getUser( final String _verificationToken ) {
+	public User getUser( 
+		final String _verificationToken
+	) 
+	{
 		final VerificationToken token = verificationTokenRepository.findByToken( _verificationToken );
-		if (token != null) {
+	
+		if (token != null) 
+		{
 			return token.getUser();
 		}
 		return null;
@@ -119,8 +124,10 @@ public class UserSupportService implements UserSupport {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public VerificationToken getVerificationToken( final String _verificationToken ) {
+	public VerificationToken getVerificationToken(
+		final String _verificationToken
+	)
+	{
 		return verificationTokenRepository.findByToken( _verificationToken );
 	}
 
@@ -128,7 +135,10 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void saveRegisteredUser( final User _user ) {
+	public void saveRegisteredUser(
+		final User _user
+	)
+	{
 		userRepository.save( _user );
 	}
 
@@ -136,16 +146,21 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void deleteUser( final User _user ) {
+	public void deleteUser( 
+		final User _user
+	)
+	{
 		final VerificationToken verificationToken = verificationTokenRepository.findByUser( _user );
 
-		if (verificationToken != null) {
+		if (verificationToken != null)
+		{
 			verificationTokenRepository.delete( verificationToken );
 		}
 
 		final PasswordResetToken passwordToken = passwordTokenRepository.findByUser( _user );
 
-		if (passwordToken != null) {
+		if (passwordToken != null)
+		{
 			passwordTokenRepository.delete( passwordToken );
 		}
 
@@ -156,9 +171,16 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createVerificationTokenForUser( final User _user, final String _token ) {
-		final VerificationToken newVerificationToken = new VerificationToken( _token, _user );
-		
+	public void createVerificationTokenForUser(
+		final User _user
+		, final String _token
+	)
+	{
+		final VerificationToken newVerificationToken = new VerificationToken(
+			_token
+			, _user
+		);
+
 		verificationTokenRepository.saveAndFlush( newVerificationToken );
 	}
 
@@ -180,8 +202,16 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void createPasswordResetTokenForUser( final User _user, final String _token ) {
-		final PasswordResetToken newPasswordResetToken = new PasswordResetToken( _token, _user );
+	public void createPasswordResetTokenForUser(
+		final User _user
+		, final String _token
+	)
+	{
+		final PasswordResetToken newPasswordResetToken = new PasswordResetToken(
+			_token
+			, _user
+		);
+		
 		passwordTokenRepository.saveAndFlush( newPasswordResetToken );
 	}
 
@@ -189,15 +219,21 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User findUserByEmail( final String _email ) {
-		return userRepository.findByEmailAddress( _email );
+	public User findUserByEmail( 
+		final String _emailAddress 
+	)
+	{
+		return userRepository.findByEmailAddress( _emailAddress );
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public PasswordResetToken getPasswordResetToken( final String _token ) {
+	public PasswordResetToken getPasswordResetToken(
+		final String _token
+	)
+	{
 		return passwordTokenRepository.findByToken( _token );
 	}
 
@@ -205,7 +241,10 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User getUserByPasswordResetToken( final String _token ) {
+	public User getUserByPasswordResetToken( 
+		final String _token
+	)
+	{
 		return passwordTokenRepository.findByToken( _token ).getUser();
 	}
 
@@ -213,7 +252,10 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public Optional<User> getUserByID( final long _id ) {
+	public Optional<User> getUserByID( 
+		final {{cookiecutter.entity_id_type}} _id
+	)
+	{
 		return userRepository.findById( _id );
 	}
 
@@ -234,23 +276,37 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public boolean checkIfValidOldPassword( final User _user, final String _oldPassword ) {
-		return passwordEncoder.matches( _oldPassword, _user.getPassword());
+	public boolean checkIfValidOldPassword(
+		final User _user
+		, final String _oldPassword
+	)
+	{
+		return passwordEncoder.matches(
+			_oldPassword
+			, _user.getPassword()
+		);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String validateVerificationToken( final String _token ) {
+	public String validateVerificationToken( 
+		final String _token
+	)
+	{
 		final VerificationToken verificationToken = verificationTokenRepository.findByToken( _token );
-		if (verificationToken == null) {
+		if (verificationToken == null)
+		{
 			return TOKEN_INVALID;
 		}
 
 		final User user = verificationToken.getUser();
 		final Calendar cal = Calendar.getInstance();
-		if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+		if ((verificationToken.getExpiryDate()
+			.getTime() - cal.getTime()
+			.getTime()) <= 0)
+		{
 			verificationTokenRepository.delete( verificationToken );
 			return TOKEN_EXPIRED;
 		}
@@ -265,7 +321,11 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public String generateQRUrl( final User _user ) throws UnsupportedEncodingException {
+	public String generateQRUrl( 
+		final User _user
+	)
+		throws UnsupportedEncodingException
+	{
 		return QR_PREFIX + URLEncoder.encode(
 			String.format(
 				"otpauth://totp/%s:%s?secret=%s&issuer=%s"
@@ -282,25 +342,37 @@ public class UserSupportService implements UserSupport {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public User updateUser2FA( final boolean _use2FA ) {
-		final Authentication curAuth = SecurityContextHolder.getContext()
-			.getAuthentication();
-		User currentUser = (User)curAuth.getPrincipal();
+	public User updateUser2FA( 
+		final boolean _use2FA
+	)
+	{
+		final Authentication currentAuthentication
+			= SecurityContextHolder.getContext().getAuthentication();
+		
+		User currentUser = (User)currentAuthentication.getPrincipal();
 		currentUser.setUsing2FA( _use2FA );
 		currentUser = userRepository.saveAndFlush( currentUser );
-		
+
 		final Authentication authentication = new UsernamePasswordAuthenticationToken(
 			currentUser
 			, currentUser.getPassword()
-			, curAuth.getAuthorities()
+			, currentAuthentication.getAuthorities()
 		);
 		SecurityContextHolder.getContext().setAuthentication( authentication );
-		
+
 		return currentUser;
 	}
 
-	private boolean emailExists( final String _email ) {
-		return userRepository.findByEmailAddress( _email ) != null;
+	/**
+	 * 
+	 * @param _emailAddress				{@link String}
+	 * @return {@code boolean}
+	 */
+	private boolean emailExists(
+		final String _emailAddress
+	)
+	{
+		return userRepository.findByEmailAddress( _emailAddress ) != null;
 	}
 
 	/**
