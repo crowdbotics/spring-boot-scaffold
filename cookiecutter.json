@@ -18,7 +18,7 @@
     "java_version": "1.8",
     "spring_boot_authentication": ["basic", "jwt", "ldap", "oauth2"],
     "spring_boot_version": "2.1.9.RELEASE",
-  	"xhr_library": ["fetch", "axios", "superagent", "request", "none"], 
+    "xhr_library": ["fetch", "axios", "superagent", "request", "none"], 
     "has_formik": "n",
     "state_management_library": ["redux", "mobx3", "mobx4", "mobx5", "none"],
     "has_styled_components": "n",
