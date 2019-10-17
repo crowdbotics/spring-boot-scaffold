@@ -1,10 +1,11 @@
 {
-    "project_slug": "",
+    "project_slug": "samplexxx",
     "project_name": "",
     "snake_case_slug": "{{ cookiecutter.project_slug|lower|replace(' ', '_')|replace('-', '_') }}",
     "dash_case_slug": "{{ cookiecutter.snake_case_slug|replace('_', '-') }}",
     "github_url": "https://github.com/crowdbotics-users/{{ cookiecutter.dash_case_slug }}",
     "custom_domain": "",
+<<<<<<< HEAD
 	"has_h2_database": "y",
 	"has_jpa": "y",
 	"has_lombok": "n",
@@ -16,4 +17,30 @@
 	"has_spring_boot_rest": "y",
 	"java_version": "1.8",
 	"spring_boot_version": "2.1.9.RELEASE"
+=======
+    "top_level_domain_name": "com",
+    "second_level_domain_name": "crowdbotics",
+    "project_package_name": "{{ cookiecutter.project_slug|lower|replace(' ', '')|replace('-', '') }}",
+    "database_option": ["h2", "mysql", "postgresql", "mongodb", "none"],
+    "entity_id_type": ["Long", "String"],
+    "has_lombok": "y",
+    "has_spring_boot_devtools": "y",
+    "has_spring_boot_jms": "n",
+    "has_spring_boot_rest": "n",
+    "has_spring_boot_session": "n",
+    "java_version": ["1.8", "11"],
+    "spring_boot_authentication": ["basic", "jwt", "ldap", "oauth2"],
+    "spring_boot_version": "2.1.9.RELEASE",
+    "xhr_library": ["fetch", "axios", "superagent", "request", "none"], 
+    "has_formik": "n",
+    "state_management_library": ["redux", "mobx3", "mobx4", "mobx5", "none"],
+    "has_styled_components": "n",
+    "has_material_ui": "n",
+    "package_manager": ["npm", "yarn"],
+    "js_type_checker": ["vanillajs", "flow", "typescript", "none"],
+    "bundling_library": ["webpack", "fuse-box", "parcel", "rollup", "browserify", "none"],
+    "testing_library": ["jest", "enzyme", "jasmine", "karma", "none"],
+    "linting_library": ["eslint", "tslint", "none"],
+    "has_prettier": "n"
+>>>>>>> 9c906e4029d732c3160018799cddd1a3c6b5069e
 }

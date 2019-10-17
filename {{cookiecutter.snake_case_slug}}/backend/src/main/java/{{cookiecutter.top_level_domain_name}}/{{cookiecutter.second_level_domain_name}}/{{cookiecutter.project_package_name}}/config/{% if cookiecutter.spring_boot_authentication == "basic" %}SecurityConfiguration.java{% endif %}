@@ -1,0 +1,143 @@
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.config;
+
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.ActiveUserStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+/**
+ * <h1>Security Configuration</h1>
+ *
+ * <p>This implementation supports basic authentication.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@Configuration
+@EnableWebSecurity
+public class SecurityConfiguration 
+	extends WebSecurityConfigurerAdapter 
+{
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity)
+	 */
+	@Override
+	protected void configure( 
+		final HttpSecurity _http
+	) 
+		throws Exception
+	{
+		_http
+			.csrf().disable()
+			.authorizeRequests()
+				.antMatchers( HttpMethod.OPTIONS, "/**" ).permitAll()
+
+//				.antMatchers("/login*","/login*", "/logout*", "/signin/**", "/signup/**", "/customLogin",
+//					"/user/registration*", "/registrationConfirm*", "/expiredAccount*", "/registration*",
+//					"/badUser*", "/user/resendRegistrationToken*" ,"/forgetPassword*", "/user/resetPassword*",
+//					"/user/changePassword*", "/emailError*", "/resources/**","/old/user/registration*","/successRegister*","/qrcode*"
+//				).permitAll()
+
+			.anyRequest().authenticated()
+			.and()
+			.httpBasic()
+			;
+	}
+
+	/**
+	 * Configure for in-memory authentication.
+	 * 
+	 * @param _builder					{@link AuthenticationManagerBuilder}
+	 * @throws Exception
+	 */
+	@Autowired
+	public void configureGlobal( 
+		final AuthenticationManagerBuilder _builder
+	)
+		throws Exception
+	{
+		_builder.inMemoryAuthentication()
+			.withUser( USERNAME )
+			.password( passwordEncoder().encode( PASSWORD ) )
+			.roles( "USER" );
+	}
+	
+	//
+	// Attributes
+	//
+	
+	public static final String PASSWORD = "password";
+	public static final String USERNAME = "admin";
+
+	//
+	// Beans
+	//
+	
+	/**
+	 *
+	 */
+	@Bean
+	public ActiveUserStore activeUserStore() 
+	{
+		return new ActiveUserStore();
+	}
+
+	/**
+	 *
+	 */
+	@Bean
+	@Override
+	public AuthenticationManager authenticationManagerBean()
+		throws Exception 
+	{
+		return super.authenticationManagerBean();
+	}
+	
+//	/**
+//	 *
+//	 */
+//	@Bean
+//	public MessageSource messageSource()
+//	{
+//		ReloadableResourceBundleMessageSource messageSource
+//		  = new ReloadableResourceBundleMessageSource();
+//
+//		messageSource.setBasename( "classpath:messages" );
+//		messageSource.setDefaultEncoding( "UTF-8" );
+//
+//		return messageSource;
+//	}
+	
+	/**
+	 *
+	 */
+	@Bean
+	public PasswordEncoder passwordEncoder() 
+	{
+		return new BCryptPasswordEncoder( 11 );
+	}
+
+	/**
+	 *
+	 */
+	@Bean
+	public SessionRegistry sessionRegistry() 
+	{
+		return new SessionRegistryImpl();
+	}
+
+}

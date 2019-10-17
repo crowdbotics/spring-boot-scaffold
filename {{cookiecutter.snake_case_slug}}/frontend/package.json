@@ -3,14 +3,112 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+
+    {%- if cookiecutter.xhr_library == "axios" -%}
     "axios": "^0.18.0",
+    {% endif %}
+    {%- if cookiecutter.xhr_library == "superagent" -%}
+    "superagent": "^5.1.0",
+    {% endif %}
+    {%- if cookiecutter.xhr_library == "request" -%}
+    "request": "^2.88.0",
+    {% endif %}
+
+    {%- if cookiecutter.has_formik == "y" -%}
     "formik": "^1.5.1",
+    {% endif %}
+        
+    {%- if cookiecutter.state_management_library == "redux" -%}
+    "mobx-state-tree": "^3.14.1",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.2.0",
+    "react-redux": "^7.1.1",
+    {% endif %}
+    {%- if cookiecutter.state_management_library == "mobx3" -%}
+    "mobx-state-tree": "^3.14.1",
+    "mobx": "^3.0.0",
+    "mobx-react": "^6.1.3",
+    {% endif %}
+    {%- if cookiecutter.state_management_library == "mobx4" -%}
+    "mobx-state-tree": "^3.14.1",
+    "mobx": "^4.0.0",
+    "mobx-react": "^6.1.3",
+    {% endif %}
+    {%- if cookiecutter.state_management_library == "mobx5" -%}
+    "mobx-state-tree": "^3.14.1",
+    "mobx": "^5.0.0",
+    "mobx-react": "^6.1.3",
+    {% endif %}
+
+        
+
+
+    {%- if cookiecutter.has_styled_components == "y" -%}
+    "styled-components": "^4.3.2",
+    "styled-reset": "^4.0.2",
+    {% endif %}
+        
+    {%- if cookiecutter.has_material_ui == "y" -%}
+    "@material-ui/core": "^4.4.0",
+    {% endif %}
+
+    {%- if cookiecutter.js_type_checker == "vanillajs" -%}
+    "vanilla.js": "^0.0.12",
+    {% endif %}
+    {%- if cookiecutter.js_type_checker == "flow" -%}
+    "flow": "^0.2.3",
+    {% endif %}
+    {%- if cookiecutter.js_type_checker == "typescript" -%}
+    "typescript": "^3.6.4",
+    {% endif %}
+
+    {%- if cookiecutter.bundling_library == "webpack" -%}
+    "webpack": "4.28.3",
+    {% endif %}
+    {%- if cookiecutter.bundling_library == "fuse-box" -%}
+    "fuse-box": "^1.3.123",
+    {% endif %}
+    {%- if cookiecutter.bundling_library == "parcel" -%}
+    "parcel": "^1.12.4",
+    {% endif %}
+    {%- if cookiecutter.bundling_library == "rollup" -%}
+    "rollup": "^1.23.1",
+    {% endif %}
+    {%- if cookiecutter.bundling_library == "browserify" -%}
+    "browserify": "^16.5.0",
+    {% endif %}
+
+    {%- if cookiecutter.testing_library == "jest" -%}
+    "jest": "23.6.0",
+    {% endif %}
+    {%- if cookiecutter.testing_library == "enzyme" -%}
+    "enzyme": "^3.10.0",
+    {% endif %}
+    {%- if cookiecutter.testing_library == "jasmine" -%}
+    "jasmine": "^3.5.0",
+    {% endif %}
+    {%- if cookiecutter.testing_library == "karma" -%}
+    "karma": "^4.3.0",
+    {% endif %}
+
+    {%- if cookiecutter.linting_library == "eslint" -%}
+    "eslint": "5.12.0",
+    {% endif %}
+    {%- if cookiecutter.linting_library == "tslint" -%}
+    "tslint": "^5.20.0",
+    {% endif %}
+    {%- if cookiecutter.has_prettier == "y" -%}
+    "prettier": "^1.18.2",
+    {% endif %} 
+
     "fsevents": "^1.2.9",
     "node-sass": "^4.12.0",
     "react": "^16.8.5",
     "react-dom": "^16.8.5",
     "react-router-dom": "^5.0.0",
-    "react-scripts": "2.1.8"
+    "react-scripts": "2.1.8",
+    "babel-loader": "8.0.5",
+    "classnames": "^2.2.6",
   },
   "scripts": {
     "start": "react-scripts start",
