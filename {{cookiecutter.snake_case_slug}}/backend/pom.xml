@@ -45,9 +45,6 @@
             <artifactId>spring-security-config</artifactId>
         </dependency>
 
-<<<<<<< HEAD
-{%- if cookiecutter.has_spring_boot_devtools == "y" -%}
-=======
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
@@ -82,7 +79,6 @@
 		</dependency>
 
 {% if cookiecutter.has_spring_boot_devtools == "y" %}
->>>>>>> 9c906e4029d732c3160018799cddd1a3c6b5069e
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
@@ -98,19 +94,7 @@
 		</dependency>
 {% endif %}
 
-<<<<<<< HEAD
-{%- if cookiecutter.has_jpa == "y" -%}
-		<dependency>
-			<groupId>org.springframework.boot</groupId
-			<artifactId>spring-boot-starter-data-rest</artifactId></dependency>
-		<dependency>
-{% endif %}
-
-{%- if cookiecutter.has_jpa == "y" -%}
-		<!-- JPA -->
-=======
 {% if cookiecutter.has_spring_boot_rest == "y" %}
->>>>>>> 9c906e4029d732c3160018799cddd1a3c6b5069e
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
