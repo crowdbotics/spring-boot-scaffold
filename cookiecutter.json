@@ -17,5 +17,16 @@
     "has_spring_boot_session": "n",
     "java_version": "1.8",
     "spring_boot_authentication": ["basic", "jwt", "ldap", "oauth2"],
-    "spring_boot_version": "2.1.9.RELEASE"
+    "spring_boot_version": "2.1.9.RELEASE",
+    "xhr_library": ["fetch", "axios", "superagent", "request", "none"], 
+    "has_formik": "n",
+    "state_management_library": ["redux", "mobx3", "mobx4", "mobx5", "none"],
+    "has_styled_components": "n",
+    "has_material_ui": "n",
+    "package_manager": ["npm", "yarn"],
+    "js_type_checker": ["vanillajs", "flow", "typescript", "none"],
+    "bundling_library": ["webpack", "fuse-box", "parcel", "rollup", "browserify", "none"],
+    "testing_library": ["jest", "enzyme", "jasmine", "karma", "none"],
+    "linting_library": ["eslint", "tslint", "none"],
+    "has_prettier": "n"
 }
