@@ -1,4 +1,4 @@
-package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.course;;
+package com.{{cookiecutter.snake_case_slug}}.course;
 
 import java.net.URI;
 import java.util.List;
