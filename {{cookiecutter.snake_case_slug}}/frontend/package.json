@@ -108,7 +108,7 @@
     "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
     "babel-loader": "8.0.5",
-    "classnames": "^2.2.6",
+    "classnames": "^2.2.6"
   },
   "scripts": {
     "start": "react-scripts start",

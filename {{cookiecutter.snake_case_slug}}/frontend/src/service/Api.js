@@ -3,7 +3,7 @@ import { appConfig } from '../constant'
 export const fetchLogin = async (email, password) => {
   try {
     const { apiKey, apiUrl } = appConfig
-    const url = `${apiUrl}\login` //no apiKey for now
+    const url = `${apiUrl}/login` //no apiKey for now
 
     const data = {
       "emailAddress": email,
@@ -31,7 +31,7 @@ export const fetchLogin = async (email, password) => {
 export const fetchRegister = async (email, password, fname, lname) => {
   try {
     const { apiKey, apiUrl } = appConfig
-    const url = `${apiUrl}\user\register` //no apiKey for now
+    const url = `${apiUrl}user/registration` //no apiKey for now
 
     const data = {
       "firstName" : fname,
