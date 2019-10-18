@@ -3,7 +3,7 @@ import { appConfig } from '../constant'
 export const fetchLogin = async (email, password) => {
   try {
     const { apiKey, apiUrl } = appConfig
-    const url = `${apiUrl}/login` //no apiKey for now
+    const url = `${apiUrl}/perform_login` //no apiKey for now
 
     const data = {
       "emailAddress": email,
