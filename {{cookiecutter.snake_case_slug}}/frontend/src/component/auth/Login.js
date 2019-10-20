@@ -20,25 +20,32 @@ class Login extends Component {
 
       if (!emailRegEx.test(email)) {
         this.setState({
-          message: 'Email is not valid!',
-          messageType: 'error'
-        })
+          message: "Email is not valid!",
+          messageType: "error"
+        });
         return;
       }
 
-      await this.context.logIn(email, password);
+      const result = await this.context.logIn(email, password);
 
-      this.setState({
-        message: '',
-        messageType: ''
-      })
+      if (!result.status)
+        this.setState({
+          message: result.message,
+          type: "error"
+        });
+      else {
+        this.setState({
+          message: "",
+          messageType: ""
+        });
 
-      this.props.history.push(`/`);
+        this.props.history.push(`/`);
+      }
     } catch (error) {
       this.setState({
-        message: 'Login failed',
-        messageType: 'error'
-      })
+        message: "Login failed",
+        messageType: "error"
+      });
     }
   };
 
@@ -56,8 +63,7 @@ class Login extends Component {
               ) : null}
               <h1 className="text-center pb-4 pt-3">
                 <span style={theme.primary}>
-                  <i className="fas fa-lock" style={theme.primary} />{" "}
-                  Login
+                  <i className="fas fa-lock" style={theme.primary} /> Login
                 </span>
               </h1>
               <form onSubmit={this.onSubmit}>
