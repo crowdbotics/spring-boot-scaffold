@@ -12,37 +12,93 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <h1>Task Controller</h1>
+ *
+ * <p>REST controller for entity {@link Task}.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@RequestMapping(
+	"/tasks"
+)
 @RestController
-@RequestMapping("/tasks")
-public class TaskController {
+public class TaskController
+{
+	/**
+	 * Autowired constructor for {@link TaskController}.
+	 *
+	 * @param _taskRepository    		{@link TaskRepository}
+	 */
+	public TaskController(
+		final TaskRepository _taskRepository
+	)
+	{
+		super();
 
-    private TaskRepository taskRepository;
+		taskRepository = _taskRepository;
+	}
 
-    public TaskController(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
-    }
+	/**
+	 * 
+	 * @param _task						{@link Task}
+	 */
+	@PostMapping
+	public void addTask(
+		@RequestBody final Task _task
+	)
+	{
+		taskRepository.save( _task );
+	}
 
-    @PostMapping
-    public void addTask(@RequestBody Task task) {
-        taskRepository.save(task);
-    }
+	/**
+	 * 
+	 * @return {@link List} containing type {@Task}
+	 */
+	@GetMapping
+	public List<Task> getTasks()
+	{
+		return taskRepository.findAll();
+	}
 
-    @GetMapping
-    public List<Task> getTasks() {
-        return taskRepository.findAll();
-    }
+	/**
+	 *
+	 * @param _id						{@code {{cookiecutter.entity_id_type}}}
+	 * @param _task						{@link Task}
+	 */
+	@PutMapping(
+		"/{_id}"
+	)
+	public void editTask(
+		@PathVariable final {{cookiecutter.entity_id_type}} _id
+		, @RequestBody final Task _task
+	)
+	{
+		Task existingTask = taskRepository.findById( _id ).get();
+		Assert.notNull( existingTask, "Task not found" );
+		existingTask.setDescription( _task.getDescription() );
+		taskRepository.save( existingTask );
+	}
 
-    @PutMapping("/{id}")
-    public void editTask(@PathVariable long id, @RequestBody Task task) {
-        Task existingTask = taskRepository.findById(id).get();
-        Assert.notNull(existingTask, "Task not found");
-        existingTask.setDescription(task.getDescription());
-        taskRepository.save(existingTask);
-    }
+	/**
+	 *
+	 * @param _id						{@code long}
+	 */
+	@DeleteMapping(
+		"/{_id}"
+	)
+	public void deleteTask(
+		@PathVariable final {{cookiecutter.entity_id_type}} _id
+	)
+	{
+		Task taskToDel = taskRepository.findById( _id ).get();
+		taskRepository.delete( taskToDel );
+	}
 
-    @DeleteMapping("/{id}")
-    public void deleteTask(@PathVariable long id) {
-        Task taskToDel = taskRepository.findById(id).get();
-        taskRepository.delete(taskToDel);
-    }
+	//
+	// Autowired
+	//
+
+	private final TaskRepository taskRepository;
+
 }

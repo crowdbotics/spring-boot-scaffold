@@ -1,32 +1,60 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.task;
 
+{% if cookiecutter.has_lombok == "y" %}
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+{%- endif %}
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+{%- if cookiecutter.has_lombok == "y" %}
+@Getter
+@NoArgsConstructor
+@Setter
+{%- endif %}
 @Entity
-public class Task {
+public class Task 
+{
+{%- if cookiecutter.has_lombok == "n" %}
+	protected Task() 
+	{
+		super();
+	}
+{%- endif %}
+
+	public Task(
+		final String _description
+	) 
+	{
+		description = _description;
+	}
+
+	/**
+	 * <h1>ID</h1>
+	 * 
+	 * <p>Internal ID for the task.</p>
+	 */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String description;
+{%- if cookiecutter.entity_id_type == "Long" %}
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
+{%- endif %}
+    private {{cookiecutter.entity_id_type}} id;
 
-    protected Task() { }
+	private String description;
 
-    public Task(String description) {
-        this.description = description;
-    }
 
-    public long getId() {
-        return id;
-    }
+{% if cookiecutter.has_lombok == "n" %}
+	//
+	// Access methods
+	//
 
-    public String getDescription() {
-        return description;
-    }
+	public long getId() { return id; }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() { return description; }
+	public void setDescription( final String _value ) { description = _value; }
+{%- endif %}
 }

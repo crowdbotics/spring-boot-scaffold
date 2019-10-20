@@ -16,6 +16,13 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * <h1>Web Security</h1>
+ *
+ * <p>This implementation supports JWT authentication.</p>
+ * 
+ * @author crowdbotics.com
+ */
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
     private UserDetailsServiceImpl userDetailsService;

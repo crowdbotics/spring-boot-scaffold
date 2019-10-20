@@ -20,6 +20,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
+/**
+ * <h1>JWT Authorization Filter</h1>
+ *
+ * <p>This implementation supports JWT authentication.</p>
+ * 
+ * @author crowdbotics.com
+ */
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
     public JWTAuthorizationFilter(AuthenticationManager authManager) {
