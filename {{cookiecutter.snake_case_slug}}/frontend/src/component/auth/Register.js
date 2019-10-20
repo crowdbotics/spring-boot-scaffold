@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Alert from "../layout/Alert";
 import AppContext from "../appContext";
 import { theme } from "../../constant";
+
 const emailRegEx =
   // eslint-disable-next-line max-len
   /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()\\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -46,12 +47,14 @@ class Register extends Component {
       await this.context.register(email, password, fname, lname);
 
       this.setState({
-        message: "",
-        messageType: ""
+        message: "Register successfully.",
+        messageType: "success"
       });
 
-      this.props.history.push(`/`);
+
+      this.props.history.push(`/login`);
     } catch (error) {
+      console.log(error)
       this.setState({
         message: "Register failed",
         messageType: "error"
@@ -113,7 +116,7 @@ class Register extends Component {
                     onChange={this.onChange}
                   />
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label htmlFor="email">First Name</label>
                   <input
                     type="text"
@@ -134,7 +137,7 @@ class Register extends Component {
                     value={this.state.lname}
                     onChange={this.onChange}
                   />
-                </div>
+                </div> */}
                 <input
                   type="submit"
                   value="Register"

@@ -7,7 +7,9 @@ import Register from "./component/auth/Register";
 import Login from "./component/auth/Login";
 import Home from "./component/home";
 import AppContext from "./component/appContext";
-import {fetchLogin, fetchRegister} from "./service/Api"
+import { fetchLogin, fetchRegister } from "./service/Api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 class App extends Component {
   constructor(props) {
@@ -15,40 +17,40 @@ class App extends Component {
 
     this.logIn = async (email, password) => {
       try {
-        await fetchLogin(email, password)
+        const loginResult = await fetchLogin(email, password);
         this.setState({
-          loggedIn: true
+          loggedIn: loginResult.status,
+          token: loginResult.token
         });
+
+        return loginResult;
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-     
     };
     this.register = async (email, password, fname, lname) => {
       try {
-        await fetchRegister(email, password, fname, lname)
+        await fetchRegister(email, password, fname, lname);
         this.setState({
-          loggedIn: true
+          loggedIn: false
         });
+        toast("Register successfully.", { type: toast.TYPE.SUCCESS });
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
-     
     };
     this.logOut = async () => {
-
       this.setState({
         loggedIn: false
       });
     };
-
 
     this.state = {
       loggedIn: false,
 
       logIn: this.logIn,
       logOut: this.logOut,
-      register: this.register,
+      register: this.register
     };
   }
 
@@ -65,6 +67,7 @@ class App extends Component {
                 <Route exact path="/register" component={Register} />
               </Switch>
             </div>
+            <ToastContainer />
           </div>
         </Router>
       </AppContext.Provider>
