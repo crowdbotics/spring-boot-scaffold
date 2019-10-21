@@ -1,5 +1,5 @@
 {
-    "project_slug": "new-sample",
+    "project_slug": "sample",
     "project_name": "",
     "project_generated_name": "",
     "repo_url": "",
@@ -12,9 +12,9 @@
     "top_level_domain_name": "com",
     "second_level_domain_name": "crowdbotics",
     "project_package_name": "{{ cookiecutter.project_slug|lower|replace(' ', '')|replace('-', '')|replace('_', '') }}",
-    "database_option": ["mysql", "h2", "mongodb", "postgresql", "none"],
+    "database_option": ["h2", "mysql", "mongodb", "postgresql", "none"],
     "entity_id_type": ["Long", "String"],
-    "has_lombok": "y",
+    "has_lombok": "n",
     "has_spring_boot_devtools": "n",
     "has_spring_boot_jms": "n",
     "has_spring_boot_rest": "y",

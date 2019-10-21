@@ -35,7 +35,7 @@ public class JWTAuthorizationFilter
 	/**
 	 * Autowired constructor for {@link JWTAuthorizationFilter}.
 	 *
-	 * @param _authenticationManager		{@link AuthenticationManager}
+	 * @param _authenticationManager {@link AuthenticationManager}
 	 */
 	public JWTAuthorizationFilter(
 		final AuthenticationManager _authenticationManager
