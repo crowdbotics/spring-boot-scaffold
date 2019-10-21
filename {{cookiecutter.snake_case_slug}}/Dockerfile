@@ -17,8 +17,7 @@ ADD ./frontend /frontend
 WORKDIR /frontend
 
 RUN npm install
-RUN npm run build
-COPY build /app/public
+RUN npm run build && cp -r build /app/public
 
 WORKDIR /app
 
