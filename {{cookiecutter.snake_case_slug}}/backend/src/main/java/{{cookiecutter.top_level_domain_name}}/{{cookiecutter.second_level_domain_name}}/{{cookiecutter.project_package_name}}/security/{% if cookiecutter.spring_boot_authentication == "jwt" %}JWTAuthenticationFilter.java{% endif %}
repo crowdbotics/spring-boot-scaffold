@@ -1,66 +1,113 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
 
-import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.EXPIRATION_TIME;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.HEADER_STRING;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.SECRET;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.TOKEN_PREFIX;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.auth0.jwt.JWT;
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.user.ApplicationUser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private AuthenticationManager authenticationManager;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
 
-    public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
-        this.authenticationManager = authenticationManager;
-    }
+import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest req,
-                                                HttpServletResponse res) throws AuthenticationException {
-        try {
-            ApplicationUser creds = new ObjectMapper()
-                    .readValue(req.getInputStream(), ApplicationUser.class);
+/**
+ * <h1>JWT Authentication Filter</h1>
+ *
+ * <p>his implementation supports JWT authentication. It is an authorization filter
+ * to validate requests containing JWTs.</p>
+ *
+ * @author crowdbotics.com
+ */
+public class JWTAuthenticationFilter 
+	extends UsernamePasswordAuthenticationFilter 
+{
+	/**
+	 * Autowired constructor for {@link JWTAuthenticationFilter}.
+	 *
+	 * @param _authenticationManager	{@link AuthenticationManager}
+	 */
+	public JWTAuthenticationFilter(
+		final AuthenticationManager _authenticationManager
+	)
+	{
+		authenticationManager = _authenticationManager;
+	}
 
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            creds.getUsername(),
-                            creds.getPassword(),
-                            new ArrayList<>())
-            );
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see AbstractAuthenticationProcessingFilter#attemptAuthentication(HttpServletRequest, HttpServletResponse)
+	 */
+	@Override
+	public Authentication attemptAuthentication(
+		final HttpServletRequest _request
+		, final HttpServletResponse _response
+	) 
+		throws AuthenticationException 
+	{
+		try 
+		{
+			final ApplicationUser credentials = new ObjectMapper()
+				.readValue(
+					_request.getInputStream()
+					, ApplicationUser.class
+				);
 
-    @Override
-    protected void successfulAuthentication(HttpServletRequest req,
-                                            HttpServletResponse res,
-                                            FilterChain chain,
-                                            Authentication auth) throws IOException, ServletException {
+			return authenticationManager.authenticate(
+				new UsernamePasswordAuthenticationToken(
+					credentials.getUsername()
+					, credentials.getPassword()
+					, new ArrayList<>()
+				)
+			);
+		} 
+		catch (IOException e) 
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
-        String token = JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .sign(HMAC512(SECRET.getBytes()));
-        res.addHeader(HEADER_STRING, TOKEN_PREFIX + token);
-    }
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see AbstractAuthenticationProcessingFilter#successfulAuthentication(HttpServletRequest, HttpServletResponse, FilterChain, Authentication) 
+	 */
+	@Override
+	protected void successfulAuthentication(
+		final HttpServletRequest _request
+		, final HttpServletResponse _response
+		, final FilterChain _filterChain
+		, final Authentication _authentication
+	)
+		throws IOException
+			, ServletException 
+	{
+		final String token = JWT.create()
+			.withSubject( ((User)_authentication.getPrincipal()).getUsername() )
+			.withExpiresAt( new Date( System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME ) )
+			.sign( HMAC512( SecurityConstants.SECRET.getBytes() ) );
+			
+		_response.addHeader(
+			SecurityConstants.HEADER_STRING
+			, SecurityConstants.TOKEN_PREFIX + token
+		);
+	}
+	
+	//
+	// Autowired
+	//
+	
+	private final AuthenticationManager authenticationManager;
+
 }

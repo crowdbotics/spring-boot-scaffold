@@ -11,6 +11,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * <h1>Application User</h1>
+ *
+ * <p>...</p>
+ *
+ * @author crowdbotics.com
+ */
 {%- if cookiecutter.has_lombok == "y" %}
 @Getter
 @NoArgsConstructor
