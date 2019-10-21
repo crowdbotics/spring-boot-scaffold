@@ -1,62 +1,145 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
 
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.HEADER_STRING;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.SECRET;
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.TOKEN_PREFIX;
-
-import java.io.IOException;
-import java.util.ArrayList;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-
+import com.auth0.jwt.exceptions.JWTVerificationException;
+{%- if cookiecutter.has_lombok == "y" %}
+import lombok.extern.slf4j.Slf4j;
+{%- endif %}
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
 
-    public JWTAuthorizationFilter(AuthenticationManager authManager) {
-        super(authManager);
-    }
+/**
+ * <h1>JWT Authorization Filter</h1>
+ *
+ * <p>This implementation supports JWT authentication. It is an authentication
+ * filter to issue JWTs to users sending credentials</p>
+ * 
+ * @author crowdbotics.com
+ */
+{%- if cookiecutter.has_lombok == "y" %}
+@Slf4j
+{%- endif %}
+public class JWTAuthorizationFilter 
+	extends BasicAuthenticationFilter 
+{
+	/**
+	 * Autowired constructor for {@link JWTAuthorizationFilter}.
+	 *
+	 * @param _authenticationManager {@link AuthenticationManager}
+	 */
+	public JWTAuthorizationFilter(
+		final AuthenticationManager _authenticationManager
+	) 
+	{
+		super( _authenticationManager );
+	}
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
-                                    FilterChain chain) throws IOException, ServletException {
-        String header = req.getHeader(HEADER_STRING);
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see BasicAuthenticationFilter#doFilterInternal(HttpServletRequest, HttpServletResponse, FilterChain)
+	 */
+	@Override
+	protected void doFilterInternal(
+		final HttpServletRequest _request
+		, final HttpServletResponse _response
+		, final FilterChain _filterChain
+	)
+		throws IOException
+			, ServletException
+	{
+		final String header = _request.getHeader( SecurityConstants.HEADER_STRING );
 
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-            chain.doFilter(req, res);
-            return;
-        }
+		// Is there a header and is it valid?
+		if ((header == null)
+		 || (header.startsWith( SecurityConstants.TOKEN_PREFIX ) == false) )
+		{
+			// No, next filter in the chain
+			_filterChain.doFilter( _request, _response );
+			return;
+		}
 
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
+		// Valid header
+		final UsernamePasswordAuthenticationToken authentication = getAuthentication( _request );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(req, res);
-    }
+		// Assign the currently authenticated principal.
+		SecurityContextHolder.getContext().setAuthentication( authentication );
+		
+		// next filter in the chain
+		_filterChain.doFilter( _request, _response );
+	}
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        String token = request.getHeader(HEADER_STRING);
-        if (token != null) {
-            // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(TOKEN_PREFIX, ""))
-                    .getSubject();
+	/**
+	 * Create and return a {@link UsernamePasswordAuthenticationToken}.
+	 *
+	 * @param _request					{@link HttpServletRequest}
+	 * @return {@link UsernamePasswordAuthenticationToken} if a token is found in the header and
+	 * 			it has a valid token signature; otherwise returns {@code null}
+	 */
+	private UsernamePasswordAuthenticationToken getAuthentication(
+		final HttpServletRequest _request
+	)
+	{
+		final String token = _request.getHeader( SecurityConstants.HEADER_STRING );
 
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }
-            return null;
-        }
-        return null;
-    }
+		// Is a token present?
+		if (token != null)
+		{
+			// Yes, parse the token.
+			try
+			{
+				final String user = JWT.require( Algorithm.HMAC512( SecurityConstants.SECRET.getBytes() ) )
+					.build()
+					.verify( token.replace(
+						SecurityConstants.TOKEN_PREFIX
+						, ""
+					) )
+					.getSubject();
+
+				// Is a user present?
+				if (user != null)
+				{
+					// Yes, build the authentication token
+					return new UsernamePasswordAuthenticationToken(
+						user
+						, null
+						, new ArrayList<>()
+					);
+				}
+
+				// No user token present
+				return null;
+			}
+			catch (JWTVerificationException _e)
+			{
+				log.debug(
+					String.format(
+						"Error occurred while validating JWT token: %s"
+						, _e.getMessage()
+					)
+				);
+			}
+		}
+
+		// No token present
+		return null;
+	}
+
+	//
+	// Attributes
+	//
+
+{%- if cookiecutter.has_lombok == "n" %}
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger( JWTAuthorizationFilter.class );
+{%- endif %}
 }

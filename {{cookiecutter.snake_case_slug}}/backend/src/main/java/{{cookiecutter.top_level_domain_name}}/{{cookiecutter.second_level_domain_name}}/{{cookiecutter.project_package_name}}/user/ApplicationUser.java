@@ -1,35 +1,65 @@
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.user;
 
+{% if cookiecutter.has_lombok == "y" %}
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+{%- endif %}
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * <h1>Application User</h1>
+ *
+ * <p>...</p>
+ *
+ * @author crowdbotics.com
+ */
+{%- if cookiecutter.has_lombok == "y" %}
+@Getter
+@NoArgsConstructor
+@Setter
+{%- endif %}
 @Entity
-public class ApplicationUser {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-    private String username;
-    private String password;
+public class ApplicationUser 
+{
+{%- if cookiecutter.has_lombok == "n" %}
+	protected ApplicationUser() 
+	{
+		super();
+	}
+{%- endif %}
 
-    public long getId() {
-        return id;
-    }
+	/**
+	 * <h1>ID</h1>
+	 * 
+	 * <p>Internal ID for the user.</p>
+	 */
+	@Id
+{%- if cookiecutter.entity_id_type == "Long" %}
+	@GeneratedValue( strategy = GenerationType.IDENTITY )
+{%- endif %}
+	private {{cookiecutter.entity_id_type}} id;
 
-    public String getUsername() {
-        return username;
-    }
+	private String username;
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+	private String password;
 
-    public String getPassword() {
-        return password;
-    }
+{% if cookiecutter.has_lombok == "n" %}
+	//
+	// Access methods
+	//
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public long getId() { return id; }
+
+	public String getUsername() { return username; }
+	public void setUsername( final String _value ) { username = _value; }
+
+	public String getPassword() { return password; }
+	public void setPassword( final String _value ) { password = _value; }
+
+{%- endif %}
 }

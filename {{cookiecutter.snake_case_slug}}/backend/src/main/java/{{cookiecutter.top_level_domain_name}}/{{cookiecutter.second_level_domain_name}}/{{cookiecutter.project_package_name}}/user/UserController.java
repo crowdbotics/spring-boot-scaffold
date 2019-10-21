@@ -6,22 +6,55 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * <h1>User Controller</h1>
+ *
+ * <p>REST controller for entity {@link ApplicationUser}.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@RequestMapping(
+	"/users"
+)
 @RestController
-@RequestMapping("/users")
-public class UserController {
+public class UserController
+{
+	/**
+	 * Autowired constructor for {@link UserController}.
+	 *
+	 * @param _applicationUserRepository    {@link ApplicationUserRepository}
+	 * @param _bCryptPasswordEncoder        {@link BCryptPasswordEncoder}
+	 */
+	public UserController(
+		final ApplicationUserRepository _applicationUserRepository
+		, final BCryptPasswordEncoder _bCryptPasswordEncoder
+	)
+	{
+		applicationUserRepository = _applicationUserRepository;
+		bCryptPasswordEncoder = _bCryptPasswordEncoder;
+	}
 
-    private ApplicationUserRepository applicationUserRepository;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+	/**
+	 * End point to sign up a new user.
+	 *
+	 * @param user                      {@link ApplicationUser}
+	 */
+	@PostMapping(
+		"/sign-up"
+	)
+	public void signUp(
+		@RequestBody final ApplicationUser user
+	)
+	{
+		user.setPassword( bCryptPasswordEncoder.encode( user.getPassword() ) );
+		applicationUserRepository.save( user );
+	}
 
-    public UserController(ApplicationUserRepository applicationUserRepository,
-                          BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.applicationUserRepository = applicationUserRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+	//
+	// Autowired
+	//
 
-    @PostMapping("/sign-up")
-    public void signUp(@RequestBody ApplicationUser user) {
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        applicationUserRepository.save(user);
-    }
+	private final ApplicationUserRepository applicationUserRepository;
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
 }
