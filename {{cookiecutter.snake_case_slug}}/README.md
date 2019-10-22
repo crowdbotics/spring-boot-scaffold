@@ -1,25 +1,25 @@
 # spring-boot-scaffold
 The Crowdbotics Spring Boot with React scaffold
 
-## Running the app
+## Running the app - {{cookiecutter.project_slug}}
 
-### 1. Start the backend
+### 1. Build {{cookiecutter.project_slug}}
+```
+mvn clean package
+```
+### 2. Start {{cookiecutter.project_slug}}
 ```
 $ cd backend
-$ mvn package
 $ mvn spring-boot:run
 ```
 
-### 2. Start the frontend
-```
-$ cd frontend
-$ npm install
-$ npm start
-```
 
-The terminal should automatically open a new browser window and navigate to `localhost:3000`. You can also do this manually.
+The terminal should automatically open a new browser window and navigate to `localhost:8080/`. You can also do this manually.
 
 ### Included Scaffold-Time Options
+{% if cookiecutter.spring_boot_authentication == "jwt" %}
+    - java-jwt
+{% endif %}
 {% if cookiecutter.spring_boot_authentication == "ldap" %}
     - spring-ldap-core
     - spring-security-ldap
