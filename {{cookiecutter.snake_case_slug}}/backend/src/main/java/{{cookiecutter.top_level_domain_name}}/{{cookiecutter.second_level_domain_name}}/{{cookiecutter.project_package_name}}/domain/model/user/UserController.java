@@ -1,5 +1,6 @@
-package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.user;
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user;
 
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.repository.ApplicationUserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,17 +38,17 @@ public class UserController
 	/**
 	 * End point to sign up a new user.
 	 *
-	 * @param user                      {@link ApplicationUser}
+	 * @param _applicationUser			{@link ApplicationUser}
 	 */
 	@PostMapping(
 		"/sign-up"
 	)
 	public void signUp(
-		@RequestBody final ApplicationUser user
+		@RequestBody final ApplicationUser _applicationUser
 	)
 	{
-		user.setPassword( bCryptPasswordEncoder.encode( user.getPassword() ) );
-		applicationUserRepository.save( user );
+		_applicationUser.setPassword( bCryptPasswordEncoder.encode( _applicationUser.getPassword() ) );
+		applicationUserRepository.save( _applicationUser );
 	}
 
 	//

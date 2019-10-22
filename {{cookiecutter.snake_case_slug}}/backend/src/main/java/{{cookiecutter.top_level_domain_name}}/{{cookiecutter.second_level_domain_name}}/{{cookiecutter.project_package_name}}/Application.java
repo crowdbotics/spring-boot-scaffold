@@ -13,14 +13,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @author crowdbotics.com
  */
 @SpringBootApplication
-public class Application {
-
-	@Bean
-	public BCryptPasswordEncoder bCryptPasswordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	public static void main( final String [] args ) {
-		SpringApplication.run( Application.class, args );
+public class Application 
+{
+	/**
+	 * Application entry point.
+	 *
+	 * @param _args
+	 */
+	public static void main( final String[] _args )
+	{
+		SpringApplication.run( Application.class, _args );
 	}
 }

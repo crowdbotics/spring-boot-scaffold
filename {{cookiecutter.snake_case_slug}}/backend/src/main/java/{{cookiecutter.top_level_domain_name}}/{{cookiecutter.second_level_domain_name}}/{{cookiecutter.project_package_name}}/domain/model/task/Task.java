@@ -1,16 +1,26 @@
-package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.task;
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.task;
 
-{% if cookiecutter.has_lombok == "y" %}
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.AbstractEntity;
+{%- if cookiecutter.has_lombok == "y" %}
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 {%- endif %}
 
 import javax.persistence.Entity;
+{%- if cookiecutter.entity_id_type == "Long" %}
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+{%- endif %}
 import javax.persistence.Id;
 
+/**
+ * <h1>Task</h1>
+ *
+ * <p>...</p>
+ *
+ * @author crowdbotics.com
+ */
 {%- if cookiecutter.has_lombok == "y" %}
 @Getter
 @NoArgsConstructor
@@ -18,31 +28,31 @@ import javax.persistence.Id;
 {%- endif %}
 @Entity
 public class Task 
+	extends AbstractEntity
 {
 {%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * No argument constructor for {@Link Task}.
+	 */
 	protected Task() 
 	{
 		super();
 	}
 {%- endif %}
 
+	/**
+	 * Description constructor for {@Link Task}.
+	 * 
+	 * @param _description				{@link String}
+	 */
 	public Task(
 		final String _description
 	) 
 	{
+		super();
+		
 		description = _description;
 	}
-
-	/**
-	 * <h1>ID</h1>
-	 * 
-	 * <p>Internal ID for the task.</p>
-	 */
-    @Id
-{%- if cookiecutter.entity_id_type == "Long" %}
-	@GeneratedValue( strategy = GenerationType.IDENTITY )
-{%- endif %}
-    private {{cookiecutter.entity_id_type}} id;
 
 	private String description;
 
@@ -51,8 +61,6 @@ public class Task
 	//
 	// Access methods
 	//
-
-	public {{cookiecutter.entity_id_type}} getId() { return id; }
 
 	public String getDescription() { return description; }
 	public void setDescription( final String _value ) { description = _value; }
