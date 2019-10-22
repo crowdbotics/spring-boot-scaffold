@@ -10,9 +10,10 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>{{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}</groupId>
-	<artifactId>{{cookiecutter.snake_case_slug}}</artifactId>
+	<artifactId>{{cookiecutter.dash_case_slug}}-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>{{cookiecutter.project_slug}}</name>
+
+	<name>{{cookiecutter.project_slug}}-backend</name>
 	<description>A Spring Boot app built with Crowdbotics</description>
 
 	<properties>
