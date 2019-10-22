@@ -17,7 +17,7 @@
     {%- if cookiecutter.has_formik == "y" -%}
     "formik": "^1.5.1",
     {% endif %}
-        
+
     {%- if cookiecutter.state_management_library == "redux" -%}
     "mobx-state-tree": "^3.14.1",
     "redux": "^4.0.0",
@@ -40,14 +40,12 @@
     "mobx-react": "^6.1.3",
     {% endif %}
 
-        
-
 
     {%- if cookiecutter.has_styled_components == "y" -%}
     "styled-components": "^4.3.2",
     "styled-reset": "^4.0.2",
     {% endif %}
-        
+
     {%- if cookiecutter.has_material_ui == "y" -%}
     "@material-ui/core": "^4.4.0",
     {% endif %}
