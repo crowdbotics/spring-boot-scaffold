@@ -52,7 +52,7 @@ public class Task
 	// Access methods
 	//
 
-	public long getId() { return id; }
+	public {{cookiecutter.entity_id_type}} getId() { return id; }
 
 	public String getDescription() { return description; }
 	public void setDescription( final String _value ) { description = _value; }

@@ -53,7 +53,7 @@ public class ApplicationUser
 	// Access methods
 	//
 
-	public long getId() { return id; }
+	public {{cookiecutter.entity_id_type}} getId() { return id; }
 
 	public String getUsername() { return username; }
 	public void setUsername( final String _value ) { username = _value; }
