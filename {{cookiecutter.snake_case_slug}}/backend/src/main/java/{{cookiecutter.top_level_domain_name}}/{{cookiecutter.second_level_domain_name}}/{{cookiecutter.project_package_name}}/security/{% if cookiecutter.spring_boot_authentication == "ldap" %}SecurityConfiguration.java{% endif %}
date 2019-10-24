@@ -1,0 +1,118 @@
+{{cookiecutter.license_header}}
+
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+/**
+ * <h1>Security Configuration</h1>
+ * 
+ * <p>This implementation supports LDAP authentication.</p>
+ * 
+ * @author crowdbotics.com
+ */
+@Configuration
+public class SecurityConfiguration 
+	extends WebSecurityConfigurerAdapter 
+{
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity) 
+	 */
+	@Override
+	protected void configure( 
+		final HttpSecurity _http
+	) 
+		throws Exception 
+	{
+		_http
+			.authorizeRequests()
+				.anyRequest().fullyAuthenticated()
+				.and()
+			.formLogin();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see WebSecurityConfigurerAdapter#configure(AuthenticationManagerBuilder) 
+	 */
+	@Override
+	public void configure( 
+		final AuthenticationManagerBuilder _auth 
+	) 
+		throws Exception 
+	{
+		_auth
+			.ldapAuthentication()
+				.userDnPatterns( "uid={0},ou=people" )
+				.groupSearchBase( "ou=groups" )
+				.contextSource()
+					.url( "ldap://localhost:8389/dc=springframework,dc=org" )
+					.and()
+				.passwordCompare()
+					.passwordEncoder( passwordEncoder() )
+					.passwordAttribute( "userPassword" );
+	}
+
+	/**
+	 * 
+	 * @return {@link PasswordEncoder}
+	 */
+	private PasswordEncoder passwordEncoder() 
+	{
+		final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+		
+		return new PasswordEncoder() 
+		{
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public String encode(
+				final CharSequence rawPassword
+			) 
+			{
+				return bcrypt.encode(rawPassword.toString());
+			}
+			
+			/**
+			 * {@inheritDoc}
+			 */
+			@Override
+			public boolean matches(
+				final CharSequence rawPassword
+				, final String encodedPassword
+			) 
+			{
+				return bcrypt.matches(rawPassword, encodedPassword);
+			}
+		};
+	}
+
+	//
+	// Beans
+	//
+
+	/**
+	 *
+	 * @return {@link BCryptPasswordEncoder}
+	 */
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder()
+	{
+		return new BCryptPasswordEncoder();
+	}
+
+	//
+	// Autowired
+	//
+
+}

@@ -1,3 +1,5 @@
+{{cookiecutter.license_header}}
+
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}};
 
 import org.springframework.boot.SpringApplication;

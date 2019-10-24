@@ -1,3 +1,5 @@
+{{cookiecutter.license_header}}
+
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user;
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.AbstractEntity;
@@ -42,9 +44,9 @@ public class ApplicationUser
 	// Fields
 	//
 
-	private String username;
+	private String username = "";
 
-	private String password;
+	private String password = "";
 
 {% if cookiecutter.has_lombok == "n" %}
 	//

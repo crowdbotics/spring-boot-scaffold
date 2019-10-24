@@ -1,3 +1,5 @@
+{{cookiecutter.license_header}}
+
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user.UserDetailsServiceImpl;
@@ -37,6 +39,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
 		userDetailsService = _userDetailsService;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity) 
+	 */
 	@Override
 	protected void configure(
 		final HttpSecurity _httpSecurity
@@ -75,6 +82,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
 
 	/**
 	 * {@inheritDoc}
+	 * 
+	 * @see WebSecurityConfigurerAdapter#configure(AuthenticationManagerBuilder) 
 	 */
 	@Override
 	public void configure(

@@ -1,10 +1,18 @@
+{{cookiecutter.license_header}}
+
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model;
 
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.common.HasLogger;
+{%- if cookiecutter.has_lombok == "y" %}
+import lombok.Getter;
+import lombok.Setter;
+{%- endif %}
 import org.springframework.data.domain.Persistable;
 
 import java.io.Serializable;
+{%- if cookiecutter.entity_id_type == "String" %}
 import java.util.UUID;
+{%- endif %}
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
@@ -16,7 +24,13 @@ import javax.validation.constraints.NotNull;
 @Access(
 	AccessType.FIELD
 )
+{%- if cookiecutter.has_lombok == "y" %}
+@Getter
+{%- endif %}
 @MappedSuperclass
+{%- if cookiecutter.has_lombok == "y" %}
+@Setter
+{%- endif %}
 public class AbstractEntity
 	implements HasLogger
 		, Identifiable
