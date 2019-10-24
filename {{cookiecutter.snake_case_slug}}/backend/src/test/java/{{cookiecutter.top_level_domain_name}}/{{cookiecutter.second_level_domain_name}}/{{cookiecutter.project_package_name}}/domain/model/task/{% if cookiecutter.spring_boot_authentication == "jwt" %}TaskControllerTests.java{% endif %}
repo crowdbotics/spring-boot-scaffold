@@ -1,0 +1,376 @@
+/*
+ * Copyright 2019 crowdbotics.com
+ */
+
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.task;
+
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.ApplicationConstants;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user.ApplicationUserDataLoader;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.repository.TaskRepository;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.JWTAuthenticationFilter;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/**
+ * <h1>Task Controller Tests</h1>
+ *
+ * @author crowdbotics.com
+ */
+@AutoConfigureMockMvc
+@RunWith(
+	SpringRunner.class
+)
+@SpringBootTest
+public class TaskControllerTests 
+{
+	//
+	// Tests
+	//
+
+	/**
+	 *
+	 */
+	@Test
+	public void contextLoads()
+	{
+		assertThat( taskController ).isNotNull();
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void get_shouldNotAllowAccessToUnauthenticatedUsers()
+		throws Exception
+	{
+		mvc.perform(
+			MockMvcRequestBuilders.get( TaskController.TASKS )
+		)
+		.andExpect( status().isForbidden() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void get_shouldGenerateAuthToken()
+		throws Exception
+	{
+		assertThat( taskController ).isNotNull();
+
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		final MvcResult mvcResult = mvc.perform(
+			MockMvcRequestBuilders.get( TaskController.TASKS )
+			.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		.andReturn()
+		;
+
+		assertThat( mvcResult ).isNotNull();
+		assertThat( mvcResult.getResponse() ).isNotNull();
+
+		final List<Task> listOfTasks = objectMapper.readValue(
+			mvcResult.getResponse().getContentAsString()
+			, new TypeReference<List<Task>>() {}
+		);
+		assertThat( listOfTasks ).isNotNull();
+		assertThat( listOfTasks ).hasSize( 0 );
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void post_shouldNotAllowAccessToUnauthenticatedUsers()
+		throws Exception
+	{
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.post( TaskController.TASKS )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+		)
+		.andExpect( status().isForbidden() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void post_shouldGenerateAuthToken()
+		throws Exception
+	{
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.post( TaskController.TASKS )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void edit_shouldNotAllowAccessToUnauthenticatedUsers()
+		throws Exception
+	{
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.put( TaskController.TASKS + "/1" )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+		)
+		.andExpect( status().isForbidden() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void edit_not_found()
+		throws Exception
+	{
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		mvc.perform(
+			MockMvcRequestBuilders.put( TaskController.TASKS + "/1" )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isNotFound() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void edit_update()
+		throws Exception
+	{
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		final Task newTask_1 = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.post( TaskController.TASKS )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask_1 ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		;
+
+		/*
+		 *
+		 */
+		final MvcResult mvcResult = mvc.perform(
+			MockMvcRequestBuilders.get( TaskController.TASKS )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+			.andExpect( status().isOk() )
+			.andReturn()
+			;
+
+		assertThat( mvcResult ).isNotNull();
+		assertThat( mvcResult.getResponse() ).isNotNull();
+
+		final List<Task> listOfTasks = objectMapper.readValue(
+			mvcResult.getResponse().getContentAsString()
+			, new TypeReference<List<Task>>() {}
+		);
+		assertThat( listOfTasks ).isNotNull();
+		assertThat( listOfTasks ).hasSize( 1 );
+
+		/*
+		 *
+		 */
+		final Task updateTask = new Task( TASK_DESCRIPTION_2 );
+
+		final String endPoint = String.format(
+			"%s/%s"
+			, TaskController.TASKS
+			, listOfTasks.get( 0 ).getId().toString()
+		);
+
+		mvc.perform(
+			MockMvcRequestBuilders.put( endPoint )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( updateTask ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void delete_shouldNotAllowAccessToUnauthenticatedUsers()
+		throws Exception
+	{
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.delete( TaskController.TASKS + "/1" )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+		)
+		.andExpect( status().isForbidden() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void delete_not_found()
+		throws Exception
+	{
+		final Task newTask = new Task( TASK_DESCRIPTION_1 );
+
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		mvc.perform(
+			MockMvcRequestBuilders.delete( TaskController.TASKS + "/1" )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isNotFound() )
+		;
+	}
+
+	/**
+	 *
+	 */
+	@Test
+	public void delete_with_authorization()
+		throws Exception
+	{
+		final String token = JWTAuthenticationFilter.createToken( ApplicationUserDataLoader.ADMIN_USERNAME );
+		assertThat( token ).isNotNull();
+
+		final Task newTask_1 = new Task( TASK_DESCRIPTION_1 );
+
+		mvc.perform(
+			MockMvcRequestBuilders.post( TaskController.TASKS )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newTask_1 ) )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		;
+
+		/*
+		 *
+		 */
+		final MvcResult mvcResult = mvc.perform(
+			MockMvcRequestBuilders.get( TaskController.TASKS )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+			.andExpect( status().isOk() )
+			.andReturn()
+			;
+
+		assertThat( mvcResult ).isNotNull();
+		assertThat( mvcResult.getResponse() ).isNotNull();
+
+		final List<Task> listOfTasks = objectMapper.readValue(
+			mvcResult.getResponse().getContentAsString()
+			, new TypeReference<List<Task>>() {}
+		);
+		assertThat( listOfTasks ).isNotNull();
+		assertThat( listOfTasks ).hasSize( 1 );
+
+		/*
+		 * Now delete it
+		 */
+		final String endPoint = String.format(
+			"%s/%s"
+			, TaskController.TASKS
+			, listOfTasks.get( 0 ).getId().toString()
+		);
+
+		mvc.perform(
+			MockMvcRequestBuilders.delete( endPoint )
+				.header( "Authorization", ApplicationConstants.TOKEN_PREFIX + token )
+		)
+		.andExpect( status().isOk() )
+		;
+	}
+
+	//
+	// Operations
+	//
+
+	@Before
+	public void beforeEachTest()
+	{
+		taskRepository.deleteAll();
+		taskRepository.flush();
+	}
+
+	//
+	// Attributes
+	//
+
+	private static final String TASK_DESCRIPTION_1 = "description 1";
+	private static final String TASK_DESCRIPTION_2 = "description 2";
+
+	//
+	// Autowired
+	//
+
+	@Autowired
+	private MockMvc mvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private TaskController taskController;
+
+	@Autowired
+	private TaskRepository taskRepository;
+
+}

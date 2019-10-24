@@ -18,11 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author crowdbotics.com
  */
 @RequestMapping(
-	"/users"
+	UserController.USERS
 )
 @RestController
 public class UserController
 {
+	public static final String USERS = "/users";
+
 	/**
 	 * Autowired constructor for {@link UserController}.
 	 *

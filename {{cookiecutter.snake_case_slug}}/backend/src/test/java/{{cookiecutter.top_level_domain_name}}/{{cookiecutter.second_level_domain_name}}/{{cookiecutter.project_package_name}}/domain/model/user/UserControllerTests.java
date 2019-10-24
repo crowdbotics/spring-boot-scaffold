@@ -2,32 +2,29 @@
 
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user;
 
-import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.config.SecurityConfiguration;
-import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.model.user.UserDto;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.repository.ApplicationUserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * <h1>User Controller Tests</h1>
  *
  * @author crowdbotics.com
  */
+@AutoConfigureMockMvc
 @RunWith(
 	SpringRunner.class
 )
@@ -53,62 +50,64 @@ public class UserControllerTests
 	 *
 	 */
 	@Test
-	public void registerUserAccount()
+	public void signUp()
 		throws Exception
 	{
-		final String baseUrl = "http://localhost:" + port + UserController.SIGN_UP;
-		final URI uri = new URI( baseUrl );
+		final ApplicationUser newApplicationUser = new ApplicationUser();
+		newApplicationUser.setUsername( "fflintstone@rockdale.com" );
+		newApplicationUser.setPassword( "password" );
 
-		final HttpHeaders headers = new HttpHeaders();
-		headers.set( "X-COM-PERSIST", "true" );
-
-		final UserDto newUserDto = new UserDto();
-		newUserDto.setEmailAddress( "fflintstone@rockday.com" );
-		newUserDto.setFirstName( "Fred" );
-		newUserDto.setLastName( "Flintstone" );
-		newUserDto.setPassword( "Ilik3pebb!es" );
-		newUserDto.setMatchingPassword( "Ilik3pebb!es" );
-
-		HttpEntity<UserDto> request = new HttpEntity<>( newUserDto, headers );
-
-		ResponseEntity<String> result = restTemplate
-			.withBasicAuth(
-				SecurityConfiguration.USERNAME
-				, SecurityConfiguration.PASSWORD
+		mvc.perform(
+			MockMvcRequestBuilders.post(
+				String.format(
+					"%s%s"
+					, UserController.USERS
+					, UserController.SIGN_UP
+				)
 			)
-			.postForEntity(
-				uri
-				, request
-				, String.class
-			)
-			;
-		assertThat( result.getStatusCode() ).isEqualTo( HttpStatus.OK );
+			.contentType( MediaType.APPLICATION_JSON )
+			.content( objectMapper.writeValueAsString( newApplicationUser ) )
+		)
+		.andExpect( status().isOk() )
+		;
 	}
 
-//	/**
-//	 *
-//	 */
-////	@Test
-//	public void registration_confirm()
-//		throws Exception
-//	{
-//		final String baseUrl = "http://localhost:" + port + RegistrationController.REGISTRATION_CONFIRM;
-//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl( baseUrl )
-//			.queryParam("token", "hello" )
-//			;
-//
-//		ResponseEntity<String> result = restTemplate
-//			.withBasicAuth(
-//				SecurityConfiguration.USERNAME
-//				, SecurityConfiguration.PASSWORD
-//			)
-//			.getForEntity(
-//				builder.build().encode().toUri()
-//				, String.class
-//			)
-//			;
-//		assertThat( result.getStatusCode() ).isEqualTo( HttpStatus.OK );
-//	}
+	/**
+	 *
+	 */
+	@Test
+	public void signUp_duplicate_conflict()
+		throws Exception
+	{
+		final String endPoint = String.format(
+			"%s%s"
+			, UserController.USERS
+			, UserController.SIGN_UP
+		);
+
+		final ApplicationUser newApplicationUser = new ApplicationUser();
+		newApplicationUser.setUsername( "fflintstone@rockdale.com" );
+		newApplicationUser.setPassword( "password" );
+
+		mvc.perform(
+			MockMvcRequestBuilders.post( endPoint )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newApplicationUser ) )
+		)
+			.andExpect( status().isOk() )
+		;
+
+		/*
+		 * Attempt to add user again
+		 */
+		mvc.perform(
+			MockMvcRequestBuilders.post( endPoint )
+				.contentType( MediaType.APPLICATION_JSON )
+				.content( objectMapper.writeValueAsString( newApplicationUser ) )
+		)
+			.andExpect( status().isConflict() )
+		;
+	}
 
 	//
 	// Operations
@@ -117,6 +116,8 @@ public class UserControllerTests
 	@Before
 	public void beforeEachTest()
 	{
+		applicationUserRepository.deleteAll();
+		applicationUserRepository.flush();
 	}
 
 	//
@@ -127,11 +128,14 @@ public class UserControllerTests
 	// Autowired
 	//
 	
-	@LocalServerPort
-	private int port;
+	@Autowired
+	private ApplicationUserRepository applicationUserRepository;
 
 	@Autowired
-	private TestRestTemplate restTemplate;
+	private MockMvc mvc;
+
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Autowired
 	private UserController userController;

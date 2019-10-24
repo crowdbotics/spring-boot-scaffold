@@ -5,6 +5,7 @@ package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domai
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.ApplicationConstants;
 {%- if cookiecutter.has_lombok == "y" %}
 import lombok.extern.slf4j.Slf4j;
 {%- endif %}
@@ -60,11 +61,11 @@ public class JWTAuthorizationFilter
 		throws IOException
 			, ServletException
 	{
-		final String header = _request.getHeader( SecurityConstants.HEADER_STRING );
+		final String header = _request.getHeader( ApplicationConstants.HEADER_STRING );
 
 		// Is there a header and is it valid?
 		if ((header == null)
-		 || (header.startsWith( SecurityConstants.TOKEN_PREFIX ) == false) )
+		 || (header.startsWith( ApplicationConstants.TOKEN_PREFIX ) == false) )
 		{
 			// No, next filter in the chain
 			_filterChain.doFilter( _request, _response );
@@ -92,7 +93,7 @@ public class JWTAuthorizationFilter
 		final HttpServletRequest _request
 	)
 	{
-		final String token = _request.getHeader( SecurityConstants.HEADER_STRING );
+		final String token = _request.getHeader( ApplicationConstants.HEADER_STRING );
 
 		// Is a token present?
 		if (token != null)
@@ -100,10 +101,10 @@ public class JWTAuthorizationFilter
 			// Yes, parse the token.
 			try
 			{
-				final String user = JWT.require( Algorithm.HMAC512( SecurityConstants.SECRET.getBytes() ) )
+				final String user = JWT.require( Algorithm.HMAC512( ApplicationConstants.SECRET.getBytes() ) )
 					.build()
 					.verify( token.replace(
-						SecurityConstants.TOKEN_PREFIX
+						ApplicationConstants.TOKEN_PREFIX
 						, ""
 					) )
 					.getSubject();

@@ -2,6 +2,7 @@
 
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
 
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.ApplicationConstants;
 import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -55,23 +56,11 @@ public class WebSecurity extends WebSecurityConfigurerAdapter
 			.csrf()
 			.disable()
 			.authorizeRequests()
-			.antMatchers(
-				HttpMethod.POST,
-				SecurityConstants.SIGN_UP_URL
-			)
+			.antMatchers( HttpMethod.POST, ApplicationConstants.SIGN_UP_URL )
 			.permitAll()
-			.antMatchers(
-				HttpMethod.GET,
-				"/"
-			)
-			.permitAll()
-			.antMatchers(
-				HttpMethod.GET,
-				"/static/**"
-			)
-			.permitAll()
-			.anyRequest()
-			.authenticated()
+			.antMatchers( HttpMethod.GET, "/" ).permitAll()
+			.antMatchers( HttpMethod.GET, "/static/**" ).permitAll()
+			.anyRequest().authenticated()
 			.and()
 			.addFilter( new JWTAuthenticationFilter( authenticationManager() ) )
 			.addFilter( new JWTAuthorizationFilter( authenticationManager() ) )

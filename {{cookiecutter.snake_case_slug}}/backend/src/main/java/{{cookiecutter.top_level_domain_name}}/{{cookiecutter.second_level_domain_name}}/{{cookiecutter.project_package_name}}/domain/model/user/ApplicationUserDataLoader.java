@@ -62,8 +62,8 @@ public class ApplicationUserDataLoader
 	// Attributes
 	//
 
-	private static final String ADMIN_PASSWORD = "password";
-	private static final String ADMIN_USERNAME = "admin@crowdbotics.com";
+	public static final String ADMIN_PASSWORD = "password";
+	public static final String ADMIN_USERNAME = "admin@crowdbotics.com";
 
 	//
 	// Autowired
