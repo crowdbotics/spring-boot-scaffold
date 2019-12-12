@@ -1,9 +1,9 @@
+{{cookiecutter.license_header}}
+
 package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security;
 
-import static {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.security.SecurityConstants.SIGN_UP_URL;
-
-import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.user.UserDetailsServiceImpl;
-
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.ApplicationConstants;
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -24,36 +24,100 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
  * @author crowdbotics.com
  */
 @EnableWebSecurity
-public class WebSecurity extends WebSecurityConfigurerAdapter {
-    private UserDetailsServiceImpl userDetailsService;
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+public class WebSecurity extends WebSecurityConfigurerAdapter 
+{
+	/**
+	 * Autowired constructor for {@link WebSecurity
+	 *
+	 * @param userDetailsService		{@link UserDetailsServiceImpl}
+	 */
+	public WebSecurity(
+		UserDetailsServiceImpl _userDetailsService
+	)
+	{
+		super();
 
-    public WebSecurity(UserDetailsServiceImpl userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+		userDetailsService = _userDetailsService;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, SIGN_UP_URL).permitAll().antMatchers(HttpMethod.GET, "/").permitAll().antMatchers(HttpMethod.GET, "/static/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
-                .addFilter(new JWTAuthorizationFilter(authenticationManager()))
-                // this disables session creation on Spring Security
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-    }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @see WebSecurityConfigurerAdapter#configure(HttpSecurity) 
+	 */
+	@Override
+	protected void configure(
+		final HttpSecurity _httpSecurity
+	)
+		throws Exception
+	{
+		_httpSecurity.cors()
+			.and()
+			.csrf()
+			.disable()
+			.authorizeRequests()
+			.antMatchers( HttpMethod.POST, ApplicationConstants.SIGN_UP_URL )
+			.permitAll()
+			.antMatchers( HttpMethod.GET, "/" ).permitAll()
+			.antMatchers( HttpMethod.GET, "/static/**" ).permitAll()
+			.anyRequest().authenticated()
+			.and()
+			.addFilter( new JWTAuthenticationFilter( authenticationManager() ) )
+			.addFilter( new JWTAuthorizationFilter( authenticationManager() ) )
+			// this disables session creation on Spring Security
+			.sessionManagement()
+			.sessionCreationPolicy( SessionCreationPolicy.STATELESS );
+	}
 
-    @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-    }
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @see WebSecurityConfigurerAdapter#configure(AuthenticationManagerBuilder) 
+	 */
+	@Override
+	public void configure(
+		final AuthenticationManagerBuilder _managerBuilder
+	)
+		throws Exception
+	{
+		_managerBuilder.userDetailsService( userDetailsService )
+			.passwordEncoder( bCryptPasswordEncoder() );
+	}
 
-  @Bean
-  CorsConfigurationSource corsConfigurationSource() {
-    final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
-    return source;
-  }
+	//
+	// Beans
+	//
+
+	/**
+	 *
+	 * @return {@link BCryptPasswordEncoder}
+	 */
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder()
+	{
+		return new BCryptPasswordEncoder();
+	}
+
+	/**
+	 *
+	 * @return {@link CorsConfigurationSource}
+	 */
+	@Bean
+	CorsConfigurationSource corsConfigurationSource()
+	{
+		final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		source.registerCorsConfiguration(
+			"/**"
+			, new CorsConfiguration().applyPermitDefaultValues()
+		);
+
+		return source;
+	}
+
+	//
+	// Autowired
+	//
+
+	private final UserDetailsServiceImpl userDetailsService;
+
 }

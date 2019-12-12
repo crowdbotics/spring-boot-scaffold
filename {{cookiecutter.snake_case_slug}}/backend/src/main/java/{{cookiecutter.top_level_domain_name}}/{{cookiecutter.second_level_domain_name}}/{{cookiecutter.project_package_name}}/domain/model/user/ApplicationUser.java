@@ -1,5 +1,8 @@
-package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.user;
+{{cookiecutter.license_header}}
 
+package {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.user;
+
+import {{cookiecutter.top_level_domain_name}}.{{cookiecutter.second_level_domain_name}}.{{cookiecutter.project_package_name}}.domain.model.AbstractEntity;
 {% if cookiecutter.has_lombok == "y" %}
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,36 +27,31 @@ import javax.persistence.Id;
 @Setter
 {%- endif %}
 @Entity
-public class ApplicationUser 
+public class ApplicationUser
+	extends AbstractEntity
 {
 {%- if cookiecutter.has_lombok == "n" %}
+	/**
+	 * No argument constructor for {@Link ApplicationUser}.
+	 */
 	protected ApplicationUser() 
 	{
 		super();
 	}
 {%- endif %}
 
-	/**
-	 * <h1>ID</h1>
-	 * 
-	 * <p>Internal ID for the user.</p>
-	 */
-	@Id
-{%- if cookiecutter.entity_id_type == "Long" %}
-	@GeneratedValue( strategy = GenerationType.IDENTITY )
-{%- endif %}
-	private {{cookiecutter.entity_id_type}} id;
+	//
+	// Fields
+	//
 
-	private String username;
+	private String username = "";
 
-	private String password;
+	private String password = "";
 
 {% if cookiecutter.has_lombok == "n" %}
 	//
 	// Access methods
 	//
-
-	public {{cookiecutter.entity_id_type}} getId() { return id; }
 
 	public String getUsername() { return username; }
 	public void setUsername( final String _value ) { username = _value; }
